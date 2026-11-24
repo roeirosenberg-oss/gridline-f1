@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gridline F1 – ארכיטקטורה, חומרה ומיפוי פינים</title><style>
+:root{--bg:#ffffff;--fg:#14171c;--dim:#5b6573;--line:#e3e6eb;--card:#f6f7f9;--acc:#e5352b;--code:#eef0f3}
+@media (prefers-color-scheme: dark){:root{--bg:#0b0d11;--fg:#eef1f5;--dim:#9aa3b1;--line:#262c37;--card:#141922;--acc:#ff4a3d;--code:#1b212c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 18px 64px}
+h1{font-size:28px;margin:0 0 8px;border-bottom:3px solid var(--acc);padding-bottom:8px}
+h2{font-size:21px;margin:34px 0 10px;padding-top:6px}
+h3{font-size:17px;margin:24px 0 8px}
+a{color:var(--acc)}
+code,pre{font-family:Consolas,"Cascadia Mono",monospace;background:var(--code);border-radius:5px;direction:ltr;unicode-bidi:isolate}
+code{padding:1px 5px;font-size:.92em}
+pre{padding:12px;overflow:auto;text-align:left}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top}
+th{background:var(--card);text-align:start}
+blockquote{margin:14px 0;padding:10px 14px;background:var(--card);border-inline-start:4px solid var(--acc);border-radius:6px}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+.nav{font-size:14px;color:var(--dim);margin-bottom:18px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+figure img{width:100%;image-rendering:pixelated;border-radius:6px;display:block;background:#000}
+figcaption{font-size:14px;color:var(--dim);margin-top:8px}
+</style></head>
+<body><main><div class="nav"><a href="../START-HERE.html">התחלה מהירה</a> · <a href="HEBREW-GUIDE.html">מדריך</a> · <a href="ARCHITECTURE.html">ארכיטקטורה</a> · <a href="VALIDATION.html">דוח בדיקות</a> · <a href="CA-CERTIFICATES.html">תעודות</a> · <a href="../preview/index.html">צילומי מסך</a></div><h1>Gridline F1 – ארכיטקטורה, חומרה ומיפוי פינים</h1>
+<h2>1. בחירת הטכנולוגיה (בקצרה)</h2>
+<table>
+<thead>
+<tr>
+<th>רכיב</th>
+<th>בחירה</th>
+<th>למה</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>מערכת בנייה</td>
+<td><strong>PlatformIO</strong>, ‏<code>espressif32@6.9.0</code></td>
+<td>בנייה משוחזרת עם גרסאות נעולות</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td><strong>Arduino‑ESP32 2.0.17</strong> (ESP‑IDF 4.4.7)</td>
+<td>יציב ומוכר ל‑ESP32 קלאסי; TFT_eSPI תואם אליו היטב</td>
+</tr>
+<tr>
+<td>תצוגה</td>
+<td><strong>TFT_eSPI 2.5.43</strong> + פונטים "חלקים" (anti‑aliased)</td>
+<td>מהיר, חסכוני בזיכרון. <strong>LVGL לא נבחר</strong>: הוא דורש עשרות KB של RAM לבאפרים ולאובייקטים, ועל ESP32 בלי PSRAM, יחד עם Wi‑Fi ו‑TLS (כ‑45KB בשיא), התועלת לא מצדיקה את הסיכון והמורכבות</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td><strong>ArduinoJson 7.4.2</strong></td>
+<td>פענוח זרם (streaming) עם מסנן – רק השדות הדרושים נשמרים ב‑RAM</td>
+</tr>
+<tr>
+<td>מגע</td>
+<td>דרייבר XPT2046 עצמאי (בפרויקט)</td>
+<td>בס SPI נפרד, סינון חציון, debounce וכיול affine</td>
+</tr>
+<tr>
+<td>פונט</td>
+<td>Barlow Semi Condensed (רישיון OFL)</td>
+<td>צר וקריא; מוטמע במערך בזיכרון הפלאש</td>
+</tr>
+</tbody>
+</table>
+<p>כל התלויות נעולות לגרסה מדויקת ב‑<code>platformio.ini</code> (ספריות לפי תגית git).</p>
+<h2>2. חומרה – ESP32‑2432S028</h2>
+<ul>
+<li>ESP32 קלאסי, 4MB פלאש, <strong>ללא PSRAM</strong> (הקוד לא מניח PSRAM; נבדק בלוג: <code>PSRAM none</code>).</li>
+<li>מסך 2.8" ‏240×320, משמש לרוחב 320×240 (rotation 1).</li>
+<li>בקר תצוגה: <strong>ST7789</strong> (יעד ראשי, מאומת אצלך בעבר); גרסה חלופית ILI9341.</li>
+<li>מגע: XPT2046 התנגדותי.</li>
+<li>גשר USB: CH340.</li>
+</ul>
+<h3>מיפוי פינים</h3>
+<table>
+<thead>
+<tr>
+<th>אות</th>
+<th>GPIO</th>
+<th>הערות</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TFT MOSI</td>
+<td>13</td>
+<td>בס HSPI (‏<code>USE_HSPI_PORT</code>)</td>
+</tr>
+<tr>
+<td>TFT MISO</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td>TFT SCLK</td>
+<td>14</td>
+<td></td>
+</tr>
+<tr>
+<td>TFT CS</td>
+<td>15</td>
+<td></td>
+</tr>
+<tr>
+<td>TFT DC</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>TFT RST</td>
+<td>‎-1</td>
+<td>לא מחובר (איפוס תוכנה)</td>
+</tr>
+<tr>
+<td>תאורה אחורית</td>
+<td>21</td>
+<td>PWM ‏(LEDC ערוץ 7, ‏5kHz, ‏10 ביט) לבהירות</td>
+</tr>
+<tr>
+<td>Touch SCLK</td>
+<td>25</td>
+<td>בס VSPI נפרד</td>
+</tr>
+<tr>
+<td>Touch MISO</td>
+<td>39</td>
+<td>כניסה בלבד</td>
+</tr>
+<tr>
+<td>Touch MOSI</td>
+<td>32</td>
+<td></td>
+</tr>
+<tr>
+<td>Touch CS</td>
+<td>33</td>
+<td></td>
+</tr>
+<tr>
+<td>Touch IRQ</td>
+<td>36</td>
+<td>כניסה בלבד (לא נדרש לפעולה; הלחץ נמדד ב‑SPI)</td>
+</tr>
+<tr>
+<td>כפתור BOOT</td>
+<td>0</td>
+<td>לחיצה ארוכה אחרי ההפעלה ← הגדרת Wi‑Fi</td>
+</tr>
+<tr>
+<td>נורית RGB</td>
+<td>‏4 / 16 / 17</td>
+<td>Active‑low; נשמרת כבויה</td>
+</tr>
+</tbody>
+</table>
+<p>הגדרות התצוגה (מ‑<code>platformio.ini</code>): <code>ST7789_DRIVER</code>, <code>TFT_INVERSION_OFF</code>, <code>TFT_RGB_ORDER=TFT_BGR</code>, ‏SPI ‏40MHz, rotation 1.</p>
+<h3>כיוון המסך (גרסה 1.1)</h3>
+<ul>
+<li>ארבע סביבות בנייה: <code>st7789</code>, <code>st7789_portrait</code>, <code>ili9341</code>, <code>ili9341_portrait</code>. ההבדל ביניהן הוא רק <code>GL_DEFAULT_ROTATION</code> (‏1 = רוחב, 0 = אורך).</li>
+<li>הכיוון ניתן לשינוי בזמן ריצה (Settings ← Orientation: Wide/Tall, ו‑Upside down להיפוך 180°) ונשמר ב‑NVS. הוא נשמר בבייט שהיה שמור ב‑Settings, כך שהגדרות קיימות נשארות תואמות.</li>
+<li>הממשק משתמש באובייקט <code>Layout</code> שמחושב לפי הסיבוב (<code>layoutApply</code>), ולא בקבועים קשיחים.</li>
+<li><strong>כיול המגע</strong> נשמר במערכת קואורדינטות אחת ("קנונית", סיבוב 1). המעבר בין הסיבובים מתבצע ב‑<code>gl::rotToCanonical</code>/<code>rotFromCanonical</code>, שנגזרו מערכי ה‑MADCTL של TFT_eSPI. כיול שנעשה בכיוון כלשהו תקף בכל הכיוונים, וכיול שנעשה בכיוון הנוכחי תמיד עקבי.</li>
+</ul>
+<h2>3. מבנה הזיכרון (partition table)</h2>
+<table>
+<thead>
+<tr>
+<th>מחיצה</th>
+<th>התחלה</th>
+<th>גודל</th>
+<th>שימוש</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nvs</td>
+<td><code>0x9000</code></td>
+<td>20KB</td>
+<td>הגדרות, כיול מגע, פרטי Wi‑Fi</td>
+</tr>
+<tr>
+<td>factory</td>
+<td><code>0x10000</code></td>
+<td>3MB</td>
+<td>האפליקציה (כ‑1.38MB בשימוש, ‏44%)</td>
+</tr>
+<tr>
+<td>littlefs</td>
+<td><code>0x310000</code></td>
+<td>896KB</td>
+<td>מטמון הנתונים האחרונים</td>
+</tr>
+<tr>
+<td>coredump</td>
+<td><code>0x3F0000</code></td>
+<td>64KB</td>
+<td>שמור לאבחון קריסות</td>
+</tr>
+</tbody>
+</table>
+<p>אין OTA ואין מחיצת otadata: עדכונים נעשים דרך USB (התקנה מלאה, או עדכון אפליקציה בלבד ב‑<code>0x10000</code>).
+ה‑bootloader ב‑<code>0x1000</code>, טבלת המחיצות ב‑<code>0x8000</code>.</p>
+<h2>4. מבנה הקוד</h2>
+<pre><code>lib/gridline_core/      ← לוגיקה טהורה ב‑C++ (נבדקת על המחשב)
+  gl_time        UTC, המרת שעון ישראל עם שעון קיץ, פענוח תאריכים
+  gl_http        קורא HTTP/1.1 עם גבולות: chunked, Content-Length, timeouts, גודל מרבי
+  gl_parse       פענוח Jolpica: לוח עונה, טבלאות נהגים/קבוצות, תוצאות; תקציב זיכרון קשיח
+  gl_logic       תזמון רענון, backoff, בחירת &quot;המרוץ הבא&quot;, מטמון עם CRC, כיול מגע, צבעי קבוצות
+  gl_model       מבני נתונים בגודל קבוע (ללא הקצאה דינמית)
+src/
+  main.cpp             רצף האתחול
+  net.cpp              משימת רשת (ליבה 0): Wi‑Fi, NTP, TLS מאומת, תזמון, שמירה למטמון
+  provisioning.cpp     מצב הגדרת Wi‑Fi: נקודת גישה + דף אינטרנט + captive portal
+  ui*.cpp              ממשק (ליבה 1): כותרת, ניווט, מסכים, דיאלוגים, הגדרות, כיול
+  display.cpp          TFT, פונטים, צבעים, תאורה
+  touch.cpp            XPT2046, סינון, debounce, אירועי נגיעה
+  settings.cpp         NVS: הגדרות (כתיבה דחויה), Wi‑Fi, כיול
+  storage.cpp          LittleFS: כתיבה אטומית (קובץ זמני + rename)
+  certs/ca_bundle.h    מאגר תעודות שורש (Mozilla, דרך certifi)
+  fonts/*.h            פונטים מוטמעים (נוצרים ע&quot;י tools/gen_fonts.py)
+</code></pre>
+<h3>מקביליות</h3>
+<ul>
+<li><strong>משימת הרשת</strong> רצה על ליבה 0 ומבצעת את כל הפעולות האיטיות (DNS, TLS, הורדה, פענוח, כתיבה לפלאש).</li>
+<li><strong>הממשק</strong> רץ על ליבה 1 (לולאת Arduino) – לכן הורדות לא מקפיאות את המסך או את המגע.</li>
+<li>הנתונים המשותפים מוגנים ב‑mutex. משימת הרשת מפענחת לבאפר נפרד ומעתיקה לנתונים המוצגים <strong>רק אחרי הצלחה מלאה</strong>.</li>
+</ul>
+<h2>5. מקור הנתונים – Jolpica‑F1 API</h2>
+<ul>
+<li>ממשק תואם Ergast בכתובת <code>https://api.jolpi.ca/ergast/f1/</code> – חינמי, ללא מפתח, ללא תשלום וללא שרת ביניים.</li>
+<li>מגבלות (מהתיעוד הרשמי, ‏<code>docs/rate_limits.md</code> במאגר jolpica-f1): ‏4 בקשות לשנייה, 500 לשעה ללא אימות. הפרויקט מבצע בדרך כלל פחות מ‑10 בקשות בשעה, עם מרווח מינימלי של 2.5 שניות בין בקשות.</li>
+<li>התיעוד דורש User‑Agent מזהה: <code>GridlineF1/1.0.0 (ESP32; arduino-esp32 2.0.17)</code>.</li>
+<li>רישיון הנתונים: CC BY‑NC‑SA 4.0 (מוצג במסך About).</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>נתון</th>
+<th>נקודת קצה</th>
+<th>הערה</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>לוח העונה</td>
+<td><code>/{year}/races.json?limit=100</code></td>
+<td>"המרוץ הבא" מחושב במכשיר לפי השעון, ולא לפי <code>next</code> של השרת (ששם תלוי בעדכון התוצאות)</td>
+</tr>
+<tr>
+<td>לוח העונה הבאה</td>
+<td><code>/{year+1}/races.json</code></td>
+<td>רק כשאין יותר מרוצים בעונה הנוכחית</td>
+</tr>
+<tr>
+<td>טבלת נהגים</td>
+<td><code>/{year}/driverstandings.json?limit=100</code></td>
+<td>אם ריק/404 (תחילת שנה) ← העונה הקודמת</td>
+</tr>
+<tr>
+<td>טבלת קבוצות</td>
+<td><code>/{year}/constructorstandings.json?limit=100</code></td>
+<td>כנ"ל</td>
+</tr>
+<tr>
+<td>מרוץ אחרון</td>
+<td><code>/{year}/last/results.json?limit=100</code></td>
+<td>כנ"ל; אם מרוץ חדש יותר הסתיים והתוצאות טרם פורסמו מוצג <code>R?? pending</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>טיפול בשגיאות:</strong> שדות חסרים או <code>null</code>, רשימות ריקות, מעבר עונה, תקופה בין עונות, תוצאות שטרם פורסמו, שגיאות HTTP ו‑429 (כולל <code>Retry-After</code>), JSON לא תקין או קטוע, תגובות גדולות מדי (מגבלת 96KB לגוף התשובה ו‑48KB זיכרון JSON), ו‑Transfer‑Encoding לא נתמך. נתון לא תקין <strong>לעולם</strong> לא מחליף נתון תקין שמור.</p>
+<h2>6. זמן ושעון ישראל</h2>
+<ul>
+<li>השעון מסונכרן ב‑NTP ‏(<code>pool.ntp.org</code>, ‏<code>time.google.com</code>, ‏<code>time.cloudflare.com</code>). המכשיר שומר <strong>UTC</strong> בלבד.</li>
+<li>ההמרה לשעון ישראל מתבצעת בקוד לפי החוק בתוקף מ‑2013: שעון קיץ מתחיל ביום שישי שלפני יום ראשון האחרון של מרץ ב‑02:00, ומסתיים ביום ראשון האחרון של אוקטובר ב‑02:00. <strong>אין היסט קבוע</strong> של +2 או +3.</li>
+<li>נבדק מול מסד הנתונים הרשמי של אזורי זמן (tzdata 2026e דרך Python zoneinfo) לכל המעברים בשנים 2013–2045 ו‑29,712 נקודות דגימה.</li>
+<li>חיבורי TLS לא נפתחים לפני שהשעון תקף; הממשק ממשיך להגיב ומציג <code>Syncing clock</code>.</li>
+<li>אם בעתיד ישתנה חוק השעון בישראל – צריך לעדכן את <code>gl_time.cpp</code> ולבנות מחדש.</li>
+</ul>
+<h2>7. אבטחת הרשת</h2>
+<ul>
+<li>HTTPS בלבד דרך <code>WiFiClientSecure</code> עם <strong>מאגר תעודות שורש</strong> (117 תעודות Mozilla דרך certifi) – בלי <code>setInsecure()</code> ובלי נפילה ל‑HTTP.</li>
+<li>אימות שם השרת: <code>mbedtls_ssl_set_hostname</code> (חיבור לפי שם). אחרי ה‑handshake הקוד בודק בנוסף ש‑<code>mbedtls_ssl_get_verify_result()==0</code>.</li>
+<li><strong>ממצא חשוב:</strong> ספריית mbedTLS המקומפלת מראש ב‑arduino‑esp32 2.0.17 נבנתה בלי <code>MBEDTLS_HAVE_TIME_DATE</code>, כלומר היא <strong>לא בודקת תאריכי תוקף</strong> של תעודות. לכן הקושחה בודקת בעצמה את <code>valid_from</code>/<code>valid_to</code> של כל תעודה בשרשרת מול שעון ה‑NTP, ודוחה תעודות שפג תוקפן או שעוד לא בתוקף.</li>
+<li><strong>ממצא שני (מהלוח האמיתי):</strong> קוד ה‑bundle של arduino‑esp32 2.0.17 בודק רק את המנפיק של התעודה העליונה שנשלחה, ולכן דחה את השרשרת של השרת (AWS), שמסתיימת בעותק חתום‑צולב של שורש מהימן. הפרויקט משתמש בעותק מתוקן של WiFiClientSecure ב‑<code>lib/WiFiClientSecure</code> (ראה <code>PATCHED.md</code>): התעודה העליונה מתקבלת אם המנפיק שלה מהימן, או שהיא עצמה זהה לשורש מהימן (שם + מפתח ציבורי), או שתעודה נמוכה ממנה בשרשרת היא שורש כזה. נבדק מול mbedTLS 2.28 אמיתי כולל מקרי התקפה.</li>
+<li>בדיקה עצמית במכשיר (About ← Run TLS self-test): חיבור תקין ל‑api.jolpi.ca, ודחייה של <code>wrong.host.badssl.com</code>, ‏<code>self-signed.badssl.com</code>, ‏<code>untrusted-root.badssl.com</code>, ‏<code>expired.badssl.com</code>.</li>
+<li>לוג: בחיבור הראשון מודפסת כל שרשרת התעודות (subject/issuer/תוקף) ל‑Serial.</li>
+<li>Timeouts: ‏TCP ‏10s, ‏handshake ‏15s, ‏idle ‏10s, ‏סה"כ ‏45s. ניסיונות חוזרים עם backoff ו‑jitter.</li>
+<li>עדכון תעודות בעתיד: ראה <code>CA-CERTIFICATES.md</code>.</li>
+</ul>
+<p><strong>הערה כנה:</strong> סביבת הפיתוח שלי חסמה גישה ישירה ל‑api.jolpi.ca, כך שלא יכולתי לבדוק את שרשרת התעודות האמיתית שלו. לכן נבחר מאגר שורשים מלא של Mozilla (ולא "הצמדה" לתעודה אחת), שמכסה כל רשות תעודות ציבורית. השרשרת האמיתית תודפס בלוג בהפעלה הראשונה על הלוח שלך. בנוסף, תעודת ה‑proxy של סביבת הפיתוח <strong>לא</strong> נכללה במאגר (הסקריפט מוודא זאת).</p>
+<h2>8. מטמון והתנהגות בלי אינטרנט</h2>
+<ul>
+<li>כל מקור נתונים נשמר ב‑LittleFS כ‑<code>/c&lt;n&gt;.bin</code> עם כותרת (magic, גרסת סכימה, גודל, CRC32 לנתונים ולכותרת, זמן ההורדה).</li>
+<li>כתיבה אטומית: כתיבה ל‑<code>.tmp</code> ואז <code>rename</code> – הפסקת חשמל באמצע לא משחיתה את הקובץ הקודם.</li>
+<li>בהפעלה: נתונים שמורים נטענים מיד ומסומנים <code>Cached</code>. אם הם צעירים מ‑10 דקות, לא מורידים שוב מיד (הגנה מפני לולאת הפעלה מחדש).</li>
+<li>ההגדרות נכתבות ל‑NVS רק כשהשתנו, 4 שניות אחרי השינוי האחרון.</li>
+</ul>
+<h2>9. אבחון (Serial ‏115200)</h2>
+<p>קטגוריות לוג: <code>BOOT</code>, <code>WIFI</code>, <code>NTP</code>, <code>HTTP</code>, <code>TLS</code>, <code>JSON</code>, <code>DATA</code>, <code>RETRY</code>, <code>FS</code>, <code>CFG</code>, <code>TOUCH</code>, <code>MEM</code>, <code>SETUP</code>.
+כוללים: גרסה ופרופיל חומרה, מצב Wi‑Fi ו‑RSSI, סנכרון שעון (UTC ושעון ישראל), נקודת הקצה, שגיאות TLS עם קוד mbedTLS, קוד HTTP, שגיאות JSON, עדכונים מוצלחים (בתים, זמן, שיא זיכרון JSON), זמני ניסיון חוזר, זיכרון פנוי ו‑stack headroom. סיסמאות לעולם לא נכתבות ללוג.</p>
+<h2>10. כלים בפרויקט</h2>
+<table>
+<thead>
+<tr>
+<th>כלי</th>
+<th>תפקיד</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tools/run_host_tests.sh</code></td>
+<td>בדיקות יחידה על המחשב עם ASan/UBSan</td>
+</tr>
+<tr>
+<td><code>tools/run_simulator.sh</code></td>
+<td>מריץ את קוד הממשק האמיתי מול framebuffer ומייצר צילומי מסך (<code>preview/screens</code>)</td>
+</tr>
+<tr>
+<td><code>tools/qemu_boot_test.py</code></td>
+<td>אתחול הקושחה המקומפלת באמולטור ESP32 של Espressif</td>
+</tr>
+<tr>
+<td><code>tools/gen_fonts.py</code></td>
+<td>יצירת הפונטים</td>
+</tr>
+<tr>
+<td><code>tools/gen_ca_bundle.py</code></td>
+<td>יצירת מאגר התעודות</td>
+</tr>
+<tr>
+<td><code>tools/build_installer_wheels.py</code></td>
+<td>הורדת חבילות Python לתוכנת ההתקנה עם hash נעול</td>
+</tr>
+<tr>
+<td><code>tools/make_release.py</code></td>
+<td>בניית החבילה: איחוד קבצים, בדיקות מבנה, SHA‑256, ‏ZIP ובדיקתו</td>
+</tr>
+</tbody>
+</table>
+<h3>בנייה מהמקור</h3>
+<pre><code>pip install platformio==6.1.18
+pio run -e st7789          # או: -e ili9341
+python3 tools/make_release.py
+</code></pre></main></body></html>

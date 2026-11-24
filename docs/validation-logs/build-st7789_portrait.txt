@@ -1,0 +1,4 @@
+RAM:   [==        ]  23.4% (used 76784 bytes from 327680 bytes)
+Flash: [====      ]  44.1% (used 1385993 bytes from 3145728 bytes)
+========================= [SUCCESS] Took 20.55 seconds =========================
+st7789_portrait  SUCCESS   00:00:20.550

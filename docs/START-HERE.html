@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gridline F1 – התחלה מהירה</title><style>
+:root{--bg:#ffffff;--fg:#14171c;--dim:#5b6573;--line:#e3e6eb;--card:#f6f7f9;--acc:#e5352b;--code:#eef0f3}
+@media (prefers-color-scheme: dark){:root{--bg:#0b0d11;--fg:#eef1f5;--dim:#9aa3b1;--line:#262c37;--card:#141922;--acc:#ff4a3d;--code:#1b212c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 18px 64px}
+h1{font-size:28px;margin:0 0 8px;border-bottom:3px solid var(--acc);padding-bottom:8px}
+h2{font-size:21px;margin:34px 0 10px;padding-top:6px}
+h3{font-size:17px;margin:24px 0 8px}
+a{color:var(--acc)}
+code,pre{font-family:Consolas,"Cascadia Mono",monospace;background:var(--code);border-radius:5px;direction:ltr;unicode-bidi:isolate}
+code{padding:1px 5px;font-size:.92em}
+pre{padding:12px;overflow:auto;text-align:left}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top}
+th{background:var(--card);text-align:start}
+blockquote{margin:14px 0;padding:10px 14px;background:var(--card);border-inline-start:4px solid var(--acc);border-radius:6px}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+.nav{font-size:14px;color:var(--dim);margin-bottom:18px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+figure img{width:100%;image-rendering:pixelated;border-radius:6px;display:block;background:#000}
+figcaption{font-size:14px;color:var(--dim);margin-top:8px}
+</style></head>
+<body><main><div class="nav"><a href="START-HERE.html">התחלה מהירה</a> · <a href="docs/HEBREW-GUIDE.html">מדריך</a> · <a href="docs/ARCHITECTURE.html">ארכיטקטורה</a> · <a href="docs/VALIDATION.html">דוח בדיקות</a> · <a href="docs/CA-CERTIFICATES.html">תעודות</a> · <a href="preview/index.html">צילומי מסך</a></div><h1>Gridline F1 – התחלה מהירה</h1>
+<ol>
+<li><strong>חבר</strong> את הלוח למחשב בכבל USB לנתונים.</li>
+<li><strong>לחץ פעמיים</strong> על <code>install.bat</code> ובחר <code>1</code>.</li>
+<li><strong>הסכם לגיבוי</strong> (מומלץ מאוד) ואחר כך להתקנה. ההתקנה מוחקת את כל מה שיש היום על הלוח.</li>
+<li><strong>כייל</strong> את מסך המגע: גע במרכז 5 מטרות ואז במטרת הבדיקה.</li>
+<li><strong>הגדר Wi‑Fi</strong> מהטלפון: התחבר לרשת <code>GRIDLINE-….</code> עם הסיסמה שמוצגת על המסך (או סרוק את ה‑QR), ובדף שנפתח (<code>http://192.168.4.1</code>) בחר את רשת הבית (2.4GHz) והזן סיסמה.</li>
+</ol>
+<p>זהו – התצוגה עובדת לבד.</p>
+<table>
+<thead>
+<tr>
+<th>קובץ</th>
+<th>מה הוא עושה</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>install.bat</code></td>
+<td>התקנה, גיבוי, שחזור, עדכון</td>
+</tr>
+<tr>
+<td><code>serial-monitor.bat</code></td>
+<td>צפייה בלוג של הלוח (לפתרון בעיות)</td>
+</tr>
+<tr>
+<td><code>verify-files.bat</code></td>
+<td>בדיקת קבצי הקושחה בלי לגעת בלוח</td>
+</tr>
+<tr>
+<td><code>docs\HEBREW-GUIDE.html</code></td>
+<td>המדריך המלא, כולל פתרון בעיות</td>
+</tr>
+<tr>
+<td><code>docs\VALIDATION.html</code></td>
+<td>מה נבדק ומה עוד צריך לבדוק על הלוח</td>
+</tr>
+<tr>
+<td><code>preview\index.html</code></td>
+<td>צילומי מסך מהסימולטור</td>
+</tr>
+<tr>
+<td><code>SHA256SUMS.txt</code></td>
+<td>סכומי ביקורת לכל הקבצים</td>
+</tr>
+</tbody>
+</table></main></body></html>

@@ -1,0 +1,17 @@
+PASS ESP32-D0WD-V3 accepted
+PASS ESP32-D0WDQ6 accepted
+PASS ESP32-U4WDH accepted
+PASS ESP32-S3 rejected
+PASS ESP32-C3 rejected
+PASS no chip line rejected
+PASS flash size 4MB parsed
+PASS flash size 8MB parsed
+PASS missing flash size
+PASS CH340 found among other ports (COM number not hard-coded)
+PASS CH340 found after COM number changed
+PASS other USB-UART listed as fallback
+PASS menu choice 2 = ST7789 portrait (after an invalid answer)
+PASS menu choice 4 = ILI9341 portrait
+PASS menu choice 1 = ST7789 landscape (default)
+PASS Q cancels
+failures: 0

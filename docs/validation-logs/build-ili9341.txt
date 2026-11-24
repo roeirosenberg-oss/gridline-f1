@@ -1,0 +1,4 @@
+RAM:   [==        ]  23.4% (used 76776 bytes from 327680 bytes)
+Flash: [====      ]  44.1% (used 1386097 bytes from 3145728 bytes)
+========================= [SUCCESS] Took 21.64 seconds =========================
+ili9341        SUCCESS   00:00:21.635

@@ -1,0 +1,83 @@
+== P_portrait_first_boot
+   PASS  banner
+   PASS  portrait rotation
+   PASS  LittleFS mounted
+   PASS  touch calibration starts
+   PASS  no crash / reboot 
+   PASS  Wi-Fi password never logged
+     [     3.634] MEM   boot: heap free 268348, min 267736, largest block 110580, stack hw 6172
+== P_portrait_normal_boot
+   PASS  calibration loaded
+   PASS  UI + network task started
+   NOTE  stopped at emulator limitation: LoadStorePIFAddrError
+   PASS  Wi-Fi password never logged
+     [     3.352] MEM   boot: heap free 273144, min 267592, largest block 110580, stack hw 6204
+     [     6.723] MEM   setup done: heap free 244668, min 238732, largest block 110580, stack hw 5292
+== A_release_first_boot
+   PASS  bootloader DIO + app start
+   PASS  banner
+   PASS  landscape rotation
+   PASS  no PSRAM assumed
+   PASS  LittleFS formatted + mounted
+   PASS  touch calibration starts
+   PASS  no crash / reboot 
+   PASS  Wi-Fi password never logged
+     [     3.416] MEM   boot: heap free 268356, min 267744, largest block 110580, stack hw 6204
+== B_release_normal_boot
+   PASS  calibration loaded from NVS
+   PASS  Wi-Fi entry found
+   PASS  UI + network task started
+   NOTE  stopped at emulator limitation: LoadStorePIFAddrError
+   PASS  Wi-Fi password never logged
+     [     0.865] MEM   boot: heap free 273152, min 267600, largest block 110580, stack hw 6204
+     [     4.452] MEM   setup done: heap free 242024, min 236548, largest block 110580, stack hw 5292
+== C1_selftest_first_boot
+   PASS  calendar parsed on target
+   PASS  driver standings parsed
+   PASS  constructor standings parsed
+   PASS  results parsed incl. DNF
+   PASS  truncated JSON rejected
+   PASS  failed parse does not overwrite data
+   PASS  cache written
+   PASS  Israel DST on target
+   PASS  self-test complete
+   PASS  UI loop keeps running
+   PASS  no crash / reboot 
+   PASS  Wi-Fi password never logged
+     [     1.039] MEM   boot: heap free 277284, min 271732, largest block 110580, stack hw 6204
+     [     4.283] MEM   setup done: heap free 255980, min 250492, largest block 110580, stack hw 5292
+     [     5.773] EMU   emulator self-test start (no radio in QEMU; fixtures = recorded 2023 API responses)
+     [     5.775] EMU   cache restored from previous boot: no
+     [     5.777] MEM   emu before parsing: heap free 255780, min 249012, largest block 110580, stack hw 10332
+     [     5.907] EMU   calendar: OK, 22 races, 129 ms
+     [     5.908] EMU   PASS calendar parsed on target
+     [     8.005] EMU   PASS cache written atomically
+     [     8.016] MEM   emu after calendar: heap free 247976, min 211172, largest block 110580, stack hw 8876
+     [     8.156] EMU   drivers: OK, 122 ms
+     [     8.170] EMU   PASS driver standings parsed on target
+     [    10.805] EMU   PASS cache written atomically
+     [    10.891] EMU   PASS constructor standings parsed on target
+     [    14.170] EMU   PASS cache written atomically
+     [    14.559] EMU   PASS race results parsed on target (incl. DNF)
+     [    19.506] EMU   PASS cache written atomically
+     [    19.520] EMU   PASS truncated JSON rejected
+     [    19.523] EMU   PASS HTML error page rejected
+     [    19.524] EMU   PASS committed calendar untouched by failed parses
+     [    19.527] EMU   PASS Israel DST end 2026 on target
+     [    19.533] MEM   emu after parsing: heap free 255680, min 211116, largest block 110580, stack hw 8876
+     [    19.536] EMU   self-test finished: 0 failure(s)
+     [    29.536] MEM   emu idle: heap free 255680, min 211116, largest block 110580, stack hw 8876
+     [    39.536] MEM   emu idle: heap free 255680, min 211116, largest block 110580, stack hw 8876
+== C2_selftest_second_boot
+   PASS  cache restored after reboot
+   PASS  cache file restored
+   PASS  no crash / reboot 
+   PASS  Wi-Fi password never logged
+     [     3.897] MEM   boot: heap free 272300, min 271732, largest block 110580, stack hw 6204
+     [    20.459] MEM   setup done: heap free 255972, min 250508, largest block 110580, stack hw 5820
+     [    21.949] EMU   emulator self-test start (no radio in QEMU; fixtures = recorded 2023 API responses)
+     [    21.954] EMU   cache restored from previous boot: yes
+     [    21.962] MEM   emu before parsing: heap free 255772, min 249028, largest block 110580, stack hw 10332
+     [    22.113] EMU   calendar: OK, 22 races, 142 ms
+     [    22.114] EMU   PASS calendar parsed on target
+failures: 0

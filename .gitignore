@@ -1,0 +1,6 @@
+.pio/
+.hostbuild/
+release/
+dist/
+__pycache__/
+*.pyc

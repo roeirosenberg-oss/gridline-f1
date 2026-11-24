@@ -1,0 +1,54 @@
+Adding SPI flash device
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x12 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4
+[     1.035] BOOT  Gridline F1 1.2.0 (ST7789 profile), built Oct 28 2026 23:43:19
+[     1.037] BOOT  chip ESP32 rev 0, 2 cores, flash 4096 KB, PSRAM none, CPU 240 MHz
+[     1.037] BOOT  reset reason 1, TLS trust store: 117 roots (certifi 2026.10.18)
+[     1.039] MEM   boot: heap free 277284, min 271732, largest block 110580, stack hw 6204
+[  1041][E][Preferences.cpp:503] getBytesLength(): nvs_get_blob len fail: cfg NOT_FOUND
+[     1.043] CFG   no stored settings (or incompatible), using defaults
+E (1354) esp_littlefs: ./components/esp_littlefs/src/littlefs/lfs.c:1367:error: Corrupted dir pair at {0x0, 0x1}
+
+E (1366) esp_littlefs: mount failed,  (-84)
+E (1367) esp_littlefs: Failed to initialize LittleFS
+[     1.511] FS    LittleFS mounted, 8192/917504 bytes used
+[     3.455] BOOT  screen rotation 1 (landscape)
+[     3.606] TOUCH calibration loaded
+[     3.610] BOOT  boot request: 0
+[     3.957] WIFI  stored credentials: yes
+[     4.267] BOOT  EMULATOR TEST BUILD: radio disabled, running on-target self-test instead of the network task
+[     4.283] MEM   setup done: heap free 255980, min 250492, largest block 110580, stack hw 5292
+[     5.773] EMU   emulator self-test start (no radio in QEMU; fixtures = recorded 2023 API responses)
+[     5.775] EMU   cache restored from previous boot: no
+[     5.777] MEM   emu before parsing: heap free 255780, min 249012, largest block 110580, stack hw 10332
+[     5.907] EMU   calendar: OK, 22 races, 129 ms
+[     5.908] EMU   PASS calendar parsed on target
+[     8.002] FS    cache /c0.bin saved (7720 bytes)
+[     8.005] EMU   PASS cache written atomically
+[     8.016] MEM   emu after calendar: heap free 247976, min 211172, largest block 110580, stack hw 8876
+[     8.156] EMU   drivers: OK, 122 ms
+[     8.170] EMU   PASS driver standings parsed on target
+[    10.798] FS    cache /c2.bin saved (4584 bytes)
+[    10.805] EMU   PASS cache written atomically
+[    10.891] EMU   PASS constructor standings parsed on target
+[    14.148] FS    cache /c3.bin saved (1096 bytes)
+[    14.170] EMU   PASS cache written atomically
+[    14.559] EMU   PASS race results parsed on target (incl. DNF)
+[    19.498] FS    cache /c4.bin saved (4384 bytes)
+[    19.506] EMU   PASS cache written atomically
+[    19.520] EMU   PASS truncated JSON rejected
+[    19.523] EMU   PASS HTML error page rejected
+[    19.524] EMU   PASS committed calendar untouched by failed parses
+[    19.527] EMU   PASS Israel DST end 2026 on target
+[    19.533] MEM   emu after parsing: heap free 255680, min 211116, largest block 110580, stack hw 8876
+[    19.536] EMU   self-test finished: 0 failure(s)
+[    29.536] MEM   emu idle: heap free 255680, min 211116, largest block 110580, stack hw 8876
+[    39.536] MEM   emu idle: heap free 255680, min 211116, largest block 110580, stack hw 8876

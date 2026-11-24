@@ -1,0 +1,27 @@
+pki written: aws_style_cross, aws_style_cross_plus_old, plain_chain, ecdsa_chain, evil_same_name_other_key, untrusted_root_only, self_signed, evil_plus_old_root
+== ORIGINAL arduino-esp32 2.0.17 callback
+aws_style_cross            cn=api.example.test     -> REJECT
+aws_style_cross_plus_old   cn=api.example.test     -> REJECT
+plain_chain                cn=api.example.test     -> ACCEPT
+ecdsa_chain                cn=api.example.test     -> ACCEPT
+plain_chain                cn=wrong.example.test   -> REJECT
+aws_style_cross            cn=wrong.example.test   -> REJECT
+evil_same_name_other_key   cn=api.example.test     -> REJECT
+untrusted_root_only        cn=api.example.test     -> REJECT
+self_signed                cn=api.example.test     -> REJECT
+evil_plus_old_root         cn=api.example.test     -> REJECT
+aws_style_cross_plus_old   cn=wrong.example.test   -> REJECT
+== PATCHED Gridline callback
+aws_style_cross            cn=api.example.test     -> ACCEPT
+aws_style_cross_plus_old   cn=api.example.test     -> ACCEPT
+plain_chain                cn=api.example.test     -> ACCEPT
+ecdsa_chain                cn=api.example.test     -> ACCEPT
+plain_chain                cn=wrong.example.test   -> REJECT
+aws_style_cross            cn=wrong.example.test   -> REJECT
+evil_same_name_other_key   cn=api.example.test     -> REJECT
+untrusted_root_only        cn=api.example.test     -> REJECT
+self_signed                cn=api.example.test     -> REJECT
+evil_plus_old_root         cn=api.example.test     -> REJECT
+aws_style_cross_plus_old   cn=wrong.example.test   -> REJECT
+PATCHED: all 11 expectations met
+real bundle: 117 of 117 certifi roots recognised as anchors (0 not parsed by mbedTLS)

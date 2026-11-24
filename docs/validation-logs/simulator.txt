@@ -1,0 +1,71 @@
+  00_splash
+  01_next_race
+  02_next_weekend_schedule
+  03_drivers_p1
+  04_drivers_p2
+  05_constructors
+  06_last_race_results_p1
+  07_last_race_results_p3
+  08_calendar
+  09_race_detail
+  10_settings_p1
+  11_settings_p2
+  12_night_dimming
+  13_favorite_picker
+  14_about_p1
+  15_about_p2
+  16_dialog
+  17_next_live
+  18_next_same_day
+  19_season_complete
+  20_results_pending_notice
+  21_offline_cached
+  22_waiting_for_data
+  23_wifi_not_set_up
+  24_next_cyan_accent
+  25_wifi_setup
+  00_splash
+  01_next_race
+  02_next_weekend_schedule
+  03_drivers_p1
+  04_drivers_p2
+  05_constructors
+  06_last_race_results_p1
+  07_last_race_results_p3
+  08_calendar
+  09_race_detail
+  10_settings_p1
+  11_settings_p2
+  12_night_dimming
+  13_favorite_picker
+  14_about_p1
+  15_about_p2
+  16_dialog
+  17_next_live
+  18_next_same_day
+  19_season_complete
+  20_results_pending_notice
+  21_offline_cached
+  22_waiting_for_data
+  23_wifi_not_set_up
+  24_next_cyan_accent
+  25_wifi_setup
+  tap test: portrait: tab DRIVERS                            PASS
+  tap test: portrait: pager down -> page 2                   PASS
+  tap test: portrait: pager up -> page 1                     PASS
+  tap test: portrait: header settings button                 PASS
+  tap test: portrait: tap 'Tall' while tall -> no change     PASS
+  x_settings_portrait
+  tap test: portrait: tap 'Wide' -> landscape                PASS
+  tap test: still on the settings screen after rotating      PASS
+  x_settings_landscape
+  tap test: landscape: tap 'Tall' -> portrait                PASS
+  tap test: portrait: Upside down on -> portrait 180         PASS
+  tap test: upside down kept: 'Wide' -> landscape 180        PASS
+  tap test: landscape: Upside down off -> landscape          PASS
+  tap test: landscape: settings icon keeps settings          PASS
+  tap test: landscape: tab NEXT                              PASS
+  tap test: landscape: tap on countdown toggles weekend view PASS
+  tap test: landscape: tap again returns to countdown        PASS
+tap tests: 0 failure(s)
+screens written to /home/claude/gridline-f1/preview/screens

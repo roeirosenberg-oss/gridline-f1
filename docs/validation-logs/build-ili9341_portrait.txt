@@ -1,0 +1,4 @@
+RAM:   [==        ]  23.4% (used 76784 bytes from 327680 bytes)
+Flash: [====      ]  44.1% (used 1386101 bytes from 3145728 bytes)
+========================= [SUCCESS] Took 19.00 seconds =========================
+ili9341_portrait  SUCCESS   00:00:18.995

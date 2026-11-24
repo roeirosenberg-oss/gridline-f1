@@ -1,0 +1,57 @@
+Adding SPI flash device
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x12 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4
+[     0.857] BOOT  Gridline F1 1.2.0 (ST7789 profile), built Oct 28 2026 23:41:14
+[     0.861] BOOT  chip ESP32 rev 0, 2 cores, flash 4096 KB, PSRAM none, CPU 240 MHz
+[     0.862] BOOT  reset reason 1, TLS trust store: 117 roots (certifi 2026.10.18)
+[     0.865] MEM   boot: heap free 273152, min 267600, largest block 110580, stack hw 6204
+[   870][E][Preferences.cpp:503] getBytesLength(): nvs_get_blob len fail: cfg NOT_FOUND
+[     0.872] CFG   no stored settings (or incompatible), using defaults
+E (1215) esp_littlefs: ./components/esp_littlefs/src/littlefs/lfs.c:1367:error: Corrupted dir pair at {0x0, 0x1}
+
+E (1222) esp_littlefs: mount failed,  (-84)
+E (1223) esp_littlefs: Failed to initialize LittleFS
+[     1.342] FS    LittleFS mounted, 8192/917504 bytes used
+[     3.305] BOOT  screen rotation 1 (landscape)
+[     3.518] TOUCH calibration loaded
+[     3.521] BOOT  boot request: 0
+[     4.023] WIFI  stored credentials: yes
+[     4.423] BOOT  staging buffer 7688 bytes
+[     4.452] MEM   setup done: heap free 242024, min 236548, largest block 110580, stack hw 5292
+Guru Meditation Error: Core  0 panic'ed (LoadStorePIFAddrError). Exception was unhandled.
+
+Core  0 register dump:
+PC      : 0x40174d42  PS      : 0x00060f30  A0      : 0x8012cd1d  A1      : 0x3ffd6b00  
+A2      : 0x60033c00  A3      : 0x3ffdbe10  A4      : 0x00000002  A5      : 0x3ffdbe10  
+A6      : 0x00060520  A7      : 0x3f455935  A8      : 0x00000000  A9      : 0x3ffd6ad0  
+A10     : 0x00000000  A11     : 0x3ffd6b40  A12     : 0x00000008  A13     : 0x00000770  
+A14     : 0x3ffc3248  A15     : 0x3ffc323c  SAR     : 0x00000000  EXCCAUSE: 0x0000000f  
+EXCVADDR: 0x60033c00  LBEG    : 0x40089c2c  LEND    : 0x40089c31  LCOUNT  : 0x00000000  
+
+
+Backtrace: 0x40174d3f:0x3ffd6b00 0x4012cd1a:0x3ffd6b30 0x4012cd9d:0x3ffd6b60 0x40108b7b:0x3ffd6b80 0x40158fba:0x3ffd6ba0 0x401597c9:0x3ffd6bc0 0x40157bf0:0x3ffd6be0 0x40195de5:0x3ffd6c00
+
+
+
+
+ELF file SHA256: 56a52f3f90cab2cb
+
+Rebooting...
+ets Jul 29 2019 12:21:46
+
+rst:0xc (SW_CPU_RESET),boot:0x12 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4

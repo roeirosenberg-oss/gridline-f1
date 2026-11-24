@@ -1,0 +1,33 @@
+Adding SPI flash device
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x12 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:1184
+load:0x40078000,len:13232
+load:0x40080400,len:3028
+entry 0x400805e4
+[     3.893] BOOT  Gridline F1 1.2.0 (ST7789 profile), built Oct 28 2026 23:43:19
+[     3.896] BOOT  chip ESP32 rev 0, 2 cores, flash 4096 KB, PSRAM none, CPU 240 MHz
+[     3.896] BOOT  reset reason 1, TLS trust store: 117 roots (certifi 2026.10.18)
+[     3.897] MEM   boot: heap free 272300, min 271732, largest block 110580, stack hw 6204
+[  3900][E][Preferences.cpp:503] getBytesLength(): nvs_get_blob len fail: cfg NOT_FOUND
+[     3.902] CFG   no stored settings (or incompatible), using defaults
+[     7.282] FS    LittleFS mounted, 36864/917504 bytes used
+[     9.819] BOOT  screen rotation 1 (landscape)
+[     9.982] TOUCH calibration loaded
+[     9.984] BOOT  boot request: 0
+[    10.463] WIFI  stored credentials: yes
+[    13.938] FS    cache /c0.bin restored
+[    16.806] FS    cache /c2.bin restored
+[    19.176] FS    cache /c3.bin restored
+[    20.446] FS    cache /c4.bin restored
+[    20.448] BOOT  EMULATOR TEST BUILD: radio disabled, running on-target self-test instead of the network task
+[    20.459] MEM   setup done: heap free 255972, min 250508, largest block 110580, stack hw 5820
+[    21.949] EMU   emulator self-test start (no radio in QEMU; fixtures = recorded 2023 API responses)
+[    21.954] EMU   cache restored from previous boot: yes
+[    21.962] MEM   emu before parsing: heap free 255772, min 249028, largest block 110580, stack hw 10332
+[    22.113] EMU   calendar: OK, 22 races, 142 ms
+[    22.114] EMU   PASS calendar parsed on target
