@@ -1,157 +1,157 @@
-# Gridline F1 – ארכיטקטורה, חומרה ומיפוי פינים
+# Gridline F1 – Architecture, hardware and pinout
 
-## 1. בחירת הטכנולוגיה (בקצרה)
+## 1. Technology choices (in short)
 
-| רכיב | בחירה | למה |
+| Component | Choice | Why |
 |---|---|---|
-| מערכת בנייה | **PlatformIO**, ‏`espressif32@6.9.0` | בנייה משוחזרת עם גרסאות נעולות |
-| Framework | **Arduino‑ESP32 2.0.17** (ESP‑IDF 4.4.7) | יציב ומוכר ל‑ESP32 קלאסי; TFT_eSPI תואם אליו היטב |
-| תצוגה | **TFT_eSPI 2.5.43** + פונטים "חלקים" (anti‑aliased) | מהיר, חסכוני בזיכרון. **LVGL לא נבחר**: הוא דורש עשרות KB של RAM לבאפרים ולאובייקטים, ועל ESP32 בלי PSRAM, יחד עם Wi‑Fi ו‑TLS (כ‑45KB בשיא), התועלת לא מצדיקה את הסיכון והמורכבות |
-| JSON | **ArduinoJson 7.4.2** | פענוח זרם (streaming) עם מסנן – רק השדות הדרושים נשמרים ב‑RAM |
-| מגע | דרייבר XPT2046 עצמאי (בפרויקט) | בס SPI נפרד, סינון חציון, debounce וכיול affine |
-| פונט | Barlow Semi Condensed (רישיון OFL) | צר וקריא; מוטמע במערך בזיכרון הפלאש |
+| Build system | **PlatformIO**, `espressif32@6.9.0` | Reproducible builds with pinned versions |
+| Framework | **Arduino‑ESP32 2.0.17** (ESP‑IDF 4.4.7) | Stable and well known on the classic ESP32; TFT_eSPI works well with it |
+| Display | **TFT_eSPI 2.5.43** + smooth (anti‑aliased) fonts | Fast and memory-efficient. **LVGL was not chosen**: it needs tens of KB of RAM for buffers and objects, and on an ESP32 without PSRAM, alongside Wi‑Fi and TLS (about 45KB at peak), the benefit doesn't justify the risk and complexity |
+| JSON | **ArduinoJson 7.4.2** | Streaming parse with a filter – only the needed fields are kept in RAM |
+| Touch | Standalone XPT2046 driver (in the project) | Separate SPI bus, median filtering, debounce and affine calibration |
+| Font | Barlow Semi Condensed (OFL license) | Narrow and readable; embedded as an array in flash |
 
-כל התלויות נעולות לגרסה מדויקת ב‑`platformio.ini` (ספריות לפי תגית git).
+All dependencies are pinned to an exact version in `platformio.ini` (libraries by git tag).
 
-## 2. חומרה – ESP32‑2432S028
+## 2. Hardware – ESP32‑2432S028
 
-- ESP32 קלאסי, 4MB פלאש, **ללא PSRAM** (הקוד לא מניח PSRAM; נבדק בלוג: `PSRAM none`).
-- מסך 2.8" ‏240×320, משמש לרוחב 320×240 (rotation 1).
-- בקר תצוגה: **ST7789** (יעד ראשי, מאומת אצלך בעבר); גרסה חלופית ILI9341.
-- מגע: XPT2046 התנגדותי.
-- גשר USB: CH340.
+- Classic ESP32, 4MB flash, **no PSRAM** (the code doesn't assume PSRAM; confirmed in the log: `PSRAM none`).
+- 2.8" 240×320 screen, used in landscape as 320×240 (rotation 1).
+- Display controller: **ST7789** (main target, previously verified on the real board); alternative ILI9341 build.
+- Touch: resistive XPT2046.
+- USB bridge: CH340.
 
-### מיפוי פינים
+### Pinout
 
-| אות | GPIO | הערות |
+| Signal | GPIO | Notes |
 |---|---|---|
-| TFT MOSI | 13 | בס HSPI (‏`USE_HSPI_PORT`) |
+| TFT MOSI | 13 | HSPI bus (`USE_HSPI_PORT`) |
 | TFT MISO | 12 | |
 | TFT SCLK | 14 | |
 | TFT CS | 15 | |
 | TFT DC | 2 | |
-| TFT RST | ‎-1 | לא מחובר (איפוס תוכנה) |
-| תאורה אחורית | 21 | PWM ‏(LEDC ערוץ 7, ‏5kHz, ‏10 ביט) לבהירות |
-| Touch SCLK | 25 | בס VSPI נפרד |
-| Touch MISO | 39 | כניסה בלבד |
+| TFT RST | -1 | Not connected (software reset) |
+| Backlight | 21 | PWM (LEDC channel 7, 5kHz, 10 bit) for brightness |
+| Touch SCLK | 25 | Separate VSPI bus |
+| Touch MISO | 39 | Input only |
 | Touch MOSI | 32 | |
 | Touch CS | 33 | |
-| Touch IRQ | 36 | כניסה בלבד (לא נדרש לפעולה; הלחץ נמדד ב‑SPI) |
-| כפתור BOOT | 0 | לחיצה ארוכה אחרי ההפעלה ← הגדרת Wi‑Fi |
-| נורית RGB | ‏4 / 16 / 17 | Active‑low; נשמרת כבויה |
+| Touch IRQ | 36 | Input only (not required; pressure is measured over SPI) |
+| BOOT button | 0 | Long press after boot → Wi‑Fi setup |
+| RGB LED | 4 / 16 / 17 | Active‑low; kept off |
 
-הגדרות התצוגה (מ‑`platformio.ini`): `ST7789_DRIVER`, `TFT_INVERSION_OFF`, `TFT_RGB_ORDER=TFT_BGR`, ‏SPI ‏40MHz, rotation 1.
+Display settings (from `platformio.ini`): `ST7789_DRIVER`, `TFT_INVERSION_OFF`, `TFT_RGB_ORDER=TFT_BGR`, SPI 40MHz, rotation 1.
 
-### כיוון המסך (גרסה 1.1)
-- ארבע סביבות בנייה: `st7789`, `st7789_portrait`, `ili9341`, `ili9341_portrait`. ההבדל ביניהן הוא רק `GL_DEFAULT_ROTATION` (‏1 = רוחב, 0 = אורך).
-- הכיוון ניתן לשינוי בזמן ריצה (Settings ← Orientation: Wide/Tall, ו‑Upside down להיפוך 180°) ונשמר ב‑NVS. הוא נשמר בבייט שהיה שמור ב‑Settings, כך שהגדרות קיימות נשארות תואמות.
-- הממשק משתמש באובייקט `Layout` שמחושב לפי הסיבוב (`layoutApply`), ולא בקבועים קשיחים.
-- **כיול המגע** נשמר במערכת קואורדינטות אחת ("קנונית", סיבוב 1). המעבר בין הסיבובים מתבצע ב‑`gl::rotToCanonical`/`rotFromCanonical`, שנגזרו מערכי ה‑MADCTL של TFT_eSPI. כיול שנעשה בכיוון כלשהו תקף בכל הכיוונים, וכיול שנעשה בכיוון הנוכחי תמיד עקבי.
+### Screen orientation (version 1.1)
+- Four build environments: `st7789`, `st7789_portrait`, `ili9341`, `ili9341_portrait`. The only difference between them is `GL_DEFAULT_ROTATION` (1 = landscape, 0 = portrait).
+- The orientation can be changed at run time (Settings → Orientation: Wide/Tall, and Upside down for a 180° flip) and is stored in NVS. It is stored in a byte that was reserved in Settings, so existing settings stay compatible.
+- The UI uses a `Layout` object computed from the rotation (`layoutApply`) rather than hard-coded constants.
+- **Touch calibration** is stored in a single ("canonical", rotation 1) coordinate system. Conversion between rotations is done in `gl::rotToCanonical`/`rotFromCanonical`, derived from TFT_eSPI's MADCTL values. A calibration made in any orientation is valid in all orientations, and a calibration made in the current orientation is always consistent.
 
-## 3. מבנה הזיכרון (partition table)
+## 3. Memory layout (partition table)
 
-| מחיצה | התחלה | גודל | שימוש |
+| Partition | Start | Size | Use |
 |---|---|---|---|
-| nvs | `0x9000` | 20KB | הגדרות, כיול מגע, פרטי Wi‑Fi |
-| factory | `0x10000` | 3MB | האפליקציה (כ‑1.38MB בשימוש, ‏44%) |
-| littlefs | `0x310000` | 896KB | מטמון הנתונים האחרונים |
-| coredump | `0x3F0000` | 64KB | שמור לאבחון קריסות |
+| nvs | `0x9000` | 20KB | Settings, touch calibration, Wi‑Fi credentials |
+| factory | `0x10000` | 3MB | The application (about 1.38MB used, 44%) |
+| littlefs | `0x310000` | 896KB | Cache of the latest data |
+| coredump | `0x3F0000` | 64KB | Reserved for crash diagnostics |
 
-אין OTA ואין מחיצת otadata: עדכונים נעשים דרך USB (התקנה מלאה, או עדכון אפליקציה בלבד ב‑`0x10000`).
-ה‑bootloader ב‑`0x1000`, טבלת המחיצות ב‑`0x8000`.
+There is no OTA and no otadata partition: updates are done over USB (full install, or app-only update at `0x10000`).
+The bootloader is at `0x1000`, the partition table at `0x8000`.
 
-## 4. מבנה הקוד
+## 4. Code structure
 
 ```
-lib/gridline_core/      ← לוגיקה טהורה ב‑C++ (נבדקת על המחשב)
-  gl_time        UTC, המרת שעון ישראל עם שעון קיץ, פענוח תאריכים
-  gl_http        קורא HTTP/1.1 עם גבולות: chunked, Content-Length, timeouts, גודל מרבי
-  gl_parse       פענוח Jolpica: לוח עונה, טבלאות נהגים/קבוצות, תוצאות; תקציב זיכרון קשיח
-  gl_logic       תזמון רענון, backoff, בחירת "המרוץ הבא", מטמון עם CRC, כיול מגע, צבעי קבוצות
-  gl_model       מבני נתונים בגודל קבוע (ללא הקצאה דינמית)
+lib/gridline_core/      ← pure C++ logic (tested on the PC)
+  gl_time        UTC, Israel time conversion with DST, date parsing
+  gl_http        Bounded HTTP/1.1 reader: chunked, Content-Length, timeouts, max size
+  gl_parse       Jolpica parsing: season calendar, driver/constructor standings, results; hard memory budget
+  gl_logic       Refresh scheduling, backoff, picking the "next race", CRC-checked cache, touch calibration, team colors
+  gl_model       Fixed-size data structures (no dynamic allocation)
 src/
-  main.cpp             רצף האתחול
-  net.cpp              משימת רשת (ליבה 0): Wi‑Fi, NTP, TLS מאומת, תזמון, שמירה למטמון
-  provisioning.cpp     מצב הגדרת Wi‑Fi: נקודת גישה + דף אינטרנט + captive portal
-  ui*.cpp              ממשק (ליבה 1): כותרת, ניווט, מסכים, דיאלוגים, הגדרות, כיול
-  display.cpp          TFT, פונטים, צבעים, תאורה
-  touch.cpp            XPT2046, סינון, debounce, אירועי נגיעה
-  settings.cpp         NVS: הגדרות (כתיבה דחויה), Wi‑Fi, כיול
-  storage.cpp          LittleFS: כתיבה אטומית (קובץ זמני + rename)
-  certs/ca_bundle.h    מאגר תעודות שורש (Mozilla, דרך certifi)
-  fonts/*.h            פונטים מוטמעים (נוצרים ע"י tools/gen_fonts.py)
+  main.cpp             Boot sequence
+  net.cpp              Network task (core 0): Wi‑Fi, NTP, verified TLS, scheduling, saving to cache
+  provisioning.cpp     Wi‑Fi setup mode: access point + web page + captive portal
+  ui*.cpp              UI (core 1): header, navigation, screens, dialogs, settings, calibration
+  display.cpp          TFT, fonts, colors, backlight
+  touch.cpp            XPT2046, filtering, debounce, touch events
+  settings.cpp         NVS: settings (deferred writes), Wi‑Fi, calibration
+  storage.cpp          LittleFS: atomic writes (temp file + rename)
+  certs/ca_bundle.h    Root certificate store (Mozilla, via certifi)
+  fonts/*.h            Embedded fonts (generated by tools/gen_fonts.py)
 ```
 
-### מקביליות
-- **משימת הרשת** רצה על ליבה 0 ומבצעת את כל הפעולות האיטיות (DNS, TLS, הורדה, פענוח, כתיבה לפלאש).
-- **הממשק** רץ על ליבה 1 (לולאת Arduino) – לכן הורדות לא מקפיאות את המסך או את המגע.
-- הנתונים המשותפים מוגנים ב‑mutex. משימת הרשת מפענחת לבאפר נפרד ומעתיקה לנתונים המוצגים **רק אחרי הצלחה מלאה**.
+### Concurrency
+- The **network task** runs on core 0 and does all the slow work (DNS, TLS, download, parsing, writing to flash).
+- The **UI** runs on core 1 (the Arduino loop) – so downloads never freeze the screen or touch.
+- Shared data is protected by a mutex. The network task parses into a separate buffer and copies into the displayed data **only after full success**.
 
-## 5. מקור הנתונים – Jolpica‑F1 API
+## 5. Data source – Jolpica‑F1 API
 
-- ממשק תואם Ergast בכתובת `https://api.jolpi.ca/ergast/f1/` – חינמי, ללא מפתח, ללא תשלום וללא שרת ביניים.
-- מגבלות (מהתיעוד הרשמי, ‏`docs/rate_limits.md` במאגר jolpica-f1): ‏4 בקשות לשנייה, 500 לשעה ללא אימות. הפרויקט מבצע בדרך כלל פחות מ‑10 בקשות בשעה, עם מרווח מינימלי של 2.5 שניות בין בקשות.
-- התיעוד דורש User‑Agent מזהה: `GridlineF1/1.0.0 (ESP32; arduino-esp32 2.0.17)`.
-- רישיון הנתונים: CC BY‑NC‑SA 4.0 (מוצג במסך About).
+- Ergast-compatible API at `https://api.jolpi.ca/ergast/f1/` – free, no key, no payment and no middle server.
+- Limits (from the official docs, `docs/rate_limits.md` in the jolpica-f1 repository): 4 requests per second, 500 per hour without authentication. The project usually makes fewer than 10 requests per hour, with a minimum spacing of 2.5 seconds between requests.
+- The docs require an identifying User‑Agent: `GridlineF1/1.0.0 (ESP32; arduino-esp32 2.0.17)`.
+- Data license: CC BY‑NC‑SA 4.0 (shown on the About screen).
 
-| נתון | נקודת קצה | הערה |
+| Data | Endpoint | Note |
 |---|---|---|
-| לוח העונה | `/{year}/races.json?limit=100` | "המרוץ הבא" מחושב במכשיר לפי השעון, ולא לפי `next` של השרת (ששם תלוי בעדכון התוצאות) |
-| לוח העונה הבאה | `/{year+1}/races.json` | רק כשאין יותר מרוצים בעונה הנוכחית |
-| טבלת נהגים | `/{year}/driverstandings.json?limit=100` | אם ריק/404 (תחילת שנה) ← העונה הקודמת |
-| טבלת קבוצות | `/{year}/constructorstandings.json?limit=100` | כנ"ל |
-| מרוץ אחרון | `/{year}/last/results.json?limit=100` | כנ"ל; אם מרוץ חדש יותר הסתיים והתוצאות טרם פורסמו מוצג `R?? pending` |
+| Season calendar | `/{year}/races.json?limit=100` | The "next race" is computed on the device from the clock, not from the server's `next` (which depends on results being updated) |
+| Next season's calendar | `/{year+1}/races.json` | Only when there are no more races in the current season |
+| Driver standings | `/{year}/driverstandings.json?limit=100` | If empty/404 (start of the year) → previous season |
+| Constructor standings | `/{year}/constructorstandings.json?limit=100` | Same |
+| Last race | `/{year}/last/results.json?limit=100` | Same; if a newer race has finished and its results aren't published yet, `R?? pending` is shown |
 
-**טיפול בשגיאות:** שדות חסרים או `null`, רשימות ריקות, מעבר עונה, תקופה בין עונות, תוצאות שטרם פורסמו, שגיאות HTTP ו‑429 (כולל `Retry-After`), JSON לא תקין או קטוע, תגובות גדולות מדי (מגבלת 96KB לגוף התשובה ו‑48KB זיכרון JSON), ו‑Transfer‑Encoding לא נתמך. נתון לא תקין **לעולם** לא מחליף נתון תקין שמור.
+**Error handling:** missing or `null` fields, empty lists, season rollover, the period between seasons, results not yet published, HTTP errors and 429 (including `Retry-After`), invalid or truncated JSON, oversized responses (a 96KB limit on the response body and 48KB of JSON memory), and unsupported Transfer‑Encoding. Invalid data **never** replaces valid cached data.
 
-## 6. זמן ושעון ישראל
+## 6. Time and Israel time
 
-- השעון מסונכרן ב‑NTP ‏(`pool.ntp.org`, ‏`time.google.com`, ‏`time.cloudflare.com`). המכשיר שומר **UTC** בלבד.
-- ההמרה לשעון ישראל מתבצעת בקוד לפי החוק בתוקף מ‑2013: שעון קיץ מתחיל ביום שישי שלפני יום ראשון האחרון של מרץ ב‑02:00, ומסתיים ביום ראשון האחרון של אוקטובר ב‑02:00. **אין היסט קבוע** של +2 או +3.
-- נבדק מול מסד הנתונים הרשמי של אזורי זמן (tzdata 2026e דרך Python zoneinfo) לכל המעברים בשנים 2013–2045 ו‑29,712 נקודות דגימה.
-- חיבורי TLS לא נפתחים לפני שהשעון תקף; הממשק ממשיך להגיב ומציג `Syncing clock`.
-- אם בעתיד ישתנה חוק השעון בישראל – צריך לעדכן את `gl_time.cpp` ולבנות מחדש.
+- The clock is synced over NTP (`pool.ntp.org`, `time.google.com`, `time.cloudflare.com`). The device stores **UTC** only.
+- Conversion to Israel time is done in code according to the law in force since 2013: DST starts on the Friday before the last Sunday of March at 02:00, and ends on the last Sunday of October at 02:00. There is **no fixed offset** of +2 or +3.
+- Tested against the official time zone database (tzdata 2026e via Python zoneinfo) for every transition from 2013 to 2045 and 29,712 sample points.
+- TLS connections are not opened before the clock is valid; the UI stays responsive and shows `Syncing clock`.
+- If Israel's clock law changes in the future, `gl_time.cpp` needs to be updated and rebuilt.
 
-## 7. אבטחת הרשת
+## 7. Network security
 
-- HTTPS בלבד דרך `WiFiClientSecure` עם **מאגר תעודות שורש** (117 תעודות Mozilla דרך certifi) – בלי `setInsecure()` ובלי נפילה ל‑HTTP.
-- אימות שם השרת: `mbedtls_ssl_set_hostname` (חיבור לפי שם). אחרי ה‑handshake הקוד בודק בנוסף ש‑`mbedtls_ssl_get_verify_result()==0`.
-- **ממצא חשוב:** ספריית mbedTLS המקומפלת מראש ב‑arduino‑esp32 2.0.17 נבנתה בלי `MBEDTLS_HAVE_TIME_DATE`, כלומר היא **לא בודקת תאריכי תוקף** של תעודות. לכן הקושחה בודקת בעצמה את `valid_from`/`valid_to` של כל תעודה בשרשרת מול שעון ה‑NTP, ודוחה תעודות שפג תוקפן או שעוד לא בתוקף.
-- **ממצא שני (מהלוח האמיתי):** קוד ה‑bundle של arduino‑esp32 2.0.17 בודק רק את המנפיק של התעודה העליונה שנשלחה, ולכן דחה את השרשרת של השרת (AWS), שמסתיימת בעותק חתום‑צולב של שורש מהימן. הפרויקט משתמש בעותק מתוקן של WiFiClientSecure ב‑`lib/WiFiClientSecure` (ראה `PATCHED.md`): התעודה העליונה מתקבלת אם המנפיק שלה מהימן, או שהיא עצמה זהה לשורש מהימן (שם + מפתח ציבורי), או שתעודה נמוכה ממנה בשרשרת היא שורש כזה. נבדק מול mbedTLS 2.28 אמיתי כולל מקרי התקפה.
-- בדיקה עצמית במכשיר (About ← Run TLS self-test): חיבור תקין ל‑api.jolpi.ca, ודחייה של `wrong.host.badssl.com`, ‏`self-signed.badssl.com`, ‏`untrusted-root.badssl.com`, ‏`expired.badssl.com`.
-- לוג: בחיבור הראשון מודפסת כל שרשרת התעודות (subject/issuer/תוקף) ל‑Serial.
-- Timeouts: ‏TCP ‏10s, ‏handshake ‏15s, ‏idle ‏10s, ‏סה"כ ‏45s. ניסיונות חוזרים עם backoff ו‑jitter.
-- עדכון תעודות בעתיד: ראה `CA-CERTIFICATES.md`.
+- HTTPS only, via `WiFiClientSecure` with a **root certificate store** (117 Mozilla certificates via certifi) – no `setInsecure()` and no fallback to HTTP.
+- Server name verification: `mbedtls_ssl_set_hostname` (connecting by name). After the handshake the code also checks that `mbedtls_ssl_get_verify_result()==0`.
+- **Important finding:** the precompiled mbedTLS library in arduino‑esp32 2.0.17 was built without `MBEDTLS_HAVE_TIME_DATE`, which means it **does not check certificate validity dates**. So the firmware itself checks `valid_from`/`valid_to` for every certificate in the chain against the NTP clock, and rejects certificates that have expired or aren't valid yet.
+- **Second finding (from the real board):** the bundle code in arduino‑esp32 2.0.17 only checks the issuer of the top certificate that was sent, so it rejected the server's (AWS) chain, which ends with a cross-signed copy of a trusted root. The project uses a fixed copy of WiFiClientSecure in `lib/WiFiClientSecure` (see `PATCHED.md`): the top certificate is accepted if its issuer is trusted, or if it is itself identical to a trusted root (name + public key), or if a certificate below it in the chain is such a root. Tested against real mbedTLS 2.28, including attack cases.
+- On-device self-test (About → Run TLS self-test): a valid connection to api.jolpi.ca, and rejection of `wrong.host.badssl.com`, `self-signed.badssl.com`, `untrusted-root.badssl.com`, `expired.badssl.com`.
+- Log: on the first connection the full certificate chain (subject/issuer/validity) is printed to Serial.
+- Timeouts: TCP 10s, handshake 15s, idle 10s, 45s in total. Retries with backoff and jitter.
+- Updating certificates in the future: see `CA-CERTIFICATES.md`.
 
-**הערה כנה:** סביבת הפיתוח שלי חסמה גישה ישירה ל‑api.jolpi.ca, כך שלא יכולתי לבדוק את שרשרת התעודות האמיתית שלו. לכן נבחר מאגר שורשים מלא של Mozilla (ולא "הצמדה" לתעודה אחת), שמכסה כל רשות תעודות ציבורית. השרשרת האמיתית תודפס בלוג בהפעלה הראשונה על הלוח שלך. בנוסף, תעודת ה‑proxy של סביבת הפיתוח **לא** נכללה במאגר (הסקריפט מוודא זאת).
+**Honest note:** the development environment blocked direct access to api.jolpi.ca, so its real certificate chain could not be tested there. That's why a full Mozilla root store was chosen (rather than "pinning" a single certificate), which covers every public certificate authority. The real chain is printed to the log on first boot on the board. In addition, the development environment's proxy certificate was **not** included in the store (the script checks this).
 
-## 8. מטמון והתנהגות בלי אינטרנט
+## 8. Cache and offline behavior
 
-- כל מקור נתונים נשמר ב‑LittleFS כ‑`/c<n>.bin` עם כותרת (magic, גרסת סכימה, גודל, CRC32 לנתונים ולכותרת, זמן ההורדה).
-- כתיבה אטומית: כתיבה ל‑`.tmp` ואז `rename` – הפסקת חשמל באמצע לא משחיתה את הקובץ הקודם.
-- בהפעלה: נתונים שמורים נטענים מיד ומסומנים `Cached`. אם הם צעירים מ‑10 דקות, לא מורידים שוב מיד (הגנה מפני לולאת הפעלה מחדש).
-- ההגדרות נכתבות ל‑NVS רק כשהשתנו, 4 שניות אחרי השינוי האחרון.
+- Each data source is saved in LittleFS as `/c<n>.bin` with a header (magic, schema version, size, CRC32 for the data and the header, download time).
+- Atomic writes: write to `.tmp` and then `rename` – a power cut in the middle doesn't corrupt the previous file.
+- On boot: cached data is loaded immediately and marked `Cached`. If it is less than 10 minutes old, it isn't downloaded again right away (protection against a reboot loop).
+- Settings are written to NVS only when they changed, 4 seconds after the last change.
 
-## 9. אבחון (Serial ‏115200)
+## 9. Diagnostics (Serial 115200)
 
-קטגוריות לוג: `BOOT`, `WIFI`, `NTP`, `HTTP`, `TLS`, `JSON`, `DATA`, `RETRY`, `FS`, `CFG`, `TOUCH`, `MEM`, `SETUP`.
-כוללים: גרסה ופרופיל חומרה, מצב Wi‑Fi ו‑RSSI, סנכרון שעון (UTC ושעון ישראל), נקודת הקצה, שגיאות TLS עם קוד mbedTLS, קוד HTTP, שגיאות JSON, עדכונים מוצלחים (בתים, זמן, שיא זיכרון JSON), זמני ניסיון חוזר, זיכרון פנוי ו‑stack headroom. סיסמאות לעולם לא נכתבות ללוג.
+Log categories: `BOOT`, `WIFI`, `NTP`, `HTTP`, `TLS`, `JSON`, `DATA`, `RETRY`, `FS`, `CFG`, `TOUCH`, `MEM`, `SETUP`.
+They include: version and hardware profile, Wi‑Fi state and RSSI, clock sync (UTC and Israel time), the endpoint, TLS errors with the mbedTLS code, HTTP code, JSON errors, successful updates (bytes, time, peak JSON memory), retry times, free memory and stack headroom. Passwords are never written to the log.
 
-## 10. כלים בפרויקט
+## 10. Project tools
 
-| כלי | תפקיד |
+| Tool | Purpose |
 |---|---|
-| `tools/run_host_tests.sh` | בדיקות יחידה על המחשב עם ASan/UBSan |
-| `tools/run_simulator.sh` | מריץ את קוד הממשק האמיתי מול framebuffer ומייצר צילומי מסך (`preview/screens`) |
-| `tools/qemu_boot_test.py` | אתחול הקושחה המקומפלת באמולטור ESP32 של Espressif |
-| `tools/gen_fonts.py` | יצירת הפונטים |
-| `tools/gen_ca_bundle.py` | יצירת מאגר התעודות |
-| `tools/build_installer_wheels.py` | הורדת חבילות Python לתוכנת ההתקנה עם hash נעול |
-| `tools/make_release.py` | בניית החבילה: איחוד קבצים, בדיקות מבנה, SHA‑256, ‏ZIP ובדיקתו |
+| `tools/run_host_tests.sh` | Unit tests on the PC with ASan/UBSan |
+| `tools/run_simulator.sh` | Runs the real UI code against a framebuffer and produces screenshots (`preview/screens`) |
+| `tools/qemu_boot_test.py` | Boots the compiled firmware in Espressif's ESP32 emulator |
+| `tools/gen_fonts.py` | Generates the fonts |
+| `tools/gen_ca_bundle.py` | Generates the certificate store |
+| `tools/build_installer_wheels.py` | Downloads Python packages for the installer with pinned hashes |
+| `tools/make_release.py` | Builds the package: merging files, structure checks, SHA‑256, ZIP and its verification |
 
-### בנייה מהמקור
+### Building from source
 ```
 pip install platformio==6.1.18
-pio run -e st7789          # או: -e ili9341
+pio run -e st7789          # or: -e ili9341
 python3 tools/make_release.py
 ```

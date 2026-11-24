@@ -134,7 +134,7 @@ def ensure_environment(argv):
                 rc = subprocess.call([py, "-m", "pip", "install", "--disable-pip-version-check", "esptool==4.8.1",
                                       "pyserial==3.5"])
             if rc != 0:
-                say("Could not prepare the environment. See docs\\HEBREW-GUIDE.html, section 'Troubleshooting'.")
+                say("Could not prepare the environment. See docs\\GUIDE.html, section 'Troubleshooting'.")
                 sys.exit(1)
     rc = subprocess.call([py, os.path.abspath(__file__)] + argv)
     sys.exit(rc)

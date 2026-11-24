@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<html lang="en" dir="ltr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>עדכון תעודות האבטחה (CA) בעתיד</title><style>
+<title>Updating the security certificates (CA) in the future</title><style>
 :root{--bg:#ffffff;--fg:#14171c;--dim:#5b6573;--line:#e3e6eb;--card:#f6f7f9;--acc:#e5352b;--code:#eef0f3}
 @media (prefers-color-scheme: dark){:root{--bg:#0b0d11;--fg:#eef1f5;--dim:#9aa3b1;--line:#262c37;--card:#141922;--acc:#ff4a3d;--code:#1b212c}}
 *{box-sizing:border-box}
@@ -27,28 +27,28 @@ figure{margin:0;background:var(--card);border:1px solid var(--line);border-radiu
 figure img{width:100%;image-rendering:pixelated;border-radius:6px;display:block;background:#000}
 figcaption{font-size:14px;color:var(--dim);margin-top:8px}
 </style></head>
-<body><main><div class="nav"><a href="../START-HERE.html">התחלה מהירה</a> · <a href="HEBREW-GUIDE.html">מדריך</a> · <a href="ARCHITECTURE.html">ארכיטקטורה</a> · <a href="VALIDATION.html">דוח בדיקות</a> · <a href="CA-CERTIFICATES.html">תעודות</a> · <a href="../preview/index.html">צילומי מסך</a></div><h1>עדכון תעודות האבטחה (CA) בעתיד</h1>
-<p>הקושחה מכילה מאגר של תעודות שורש ציבוריות (Root CA) שבעזרתו היא מוודאת שהיא באמת מדברת עם <code>api.jolpi.ca</code>.</p>
+<body><main><div class="nav"><a href="../START-HERE.html">Quick start</a> · <a href="GUIDE.html">Guide</a> · <a href="ARCHITECTURE.html">Architecture</a> · <a href="VALIDATION.html">Test report</a> · <a href="CA-CERTIFICATES.html">Certificates</a> · <a href="../preview/index.html">Screenshots</a></div><h1>Updating the security certificates (CA) in the future</h1>
+<p>The firmware contains a store of public root certificates (Root CAs) that it uses to verify that it is really talking to <code>api.jolpi.ca</code>.</p>
 <ul>
-<li>מקור: מאגר התעודות של Mozilla, כפי שהוא נארז בחבילת Python ‏<code>certifi</code>.</li>
-<li>הגרסה הנוכחית: <code>certifi 2026.10.18</code>, ‏117 תעודות (מוצג במסך About ← TLS trust).</li>
-<li>הפורמט: ה‑bundle של ESP‑IDF (‏<code>x509_crt_bundle</code>) שנטען עם <code>WiFiClientSecure::setCACertBundle()</code>.</li>
-<li>הקובץ שנוצר: <code>src/certs/ca_bundle.h</code>.</li>
+<li>Source: Mozilla's certificate store, as packaged in the Python <code>certifi</code> package.</li>
+<li>Current version: <code>certifi 2026.10.18</code>, 117 certificates (shown on the About → TLS trust screen).</li>
+<li>Format: the ESP‑IDF bundle (<code>x509_crt_bundle</code>), loaded with <code>WiFiClientSecure::setCACertBundle()</code>.</li>
+<li>Generated file: <code>src/certs/ca_bundle.h</code>.</li>
 </ul>
-<h2>מתי צריך לעדכן?</h2>
+<h2>When does it need updating?</h2>
 <ul>
-<li>תעודות שורש מתחלפות לאט (שנים). מאגר מלא של Mozilla מכסה גם מעבר של השרת לרשות תעודות אחרת.</li>
-<li>אם יום אחד מופיע <code>TLS error</code> קבוע, השעון ב‑About מסונכרן, ובלוג (<code>serial-monitor.bat</code>) יש שגיאת אימות תעודה – כנראה הגיע הזמן לעדכן.</li>
+<li>Root certificates change slowly (over years). The full Mozilla store also covers the server moving to a different certificate authority.</li>
+<li>If a persistent <code>TLS error</code> appears one day, the clock on the About screen is synced, and the log (<code>serial-monitor.bat</code>) shows a certificate verification error – it is probably time to update.</li>
 </ul>
-<h2>איך מעדכנים (על Windows)</h2>
+<h2>How to update (on Windows)</h2>
 <ol>
-<li>הורד את קוד המקור (<code>source/gridline-f1-source-v1.2.0.zip</code>) וחלץ.</li>
-<li>בתיקיית הפרויקט:
+<li>Download the source code (<code>source/gridline-f1-source-v1.2.0.zip</code>) and extract it.</li>
+<li>In the project folder:
    <code>py -3.12 -m pip install --upgrade certifi cryptography platformio==6.1.18
    py -3.12 tools\gen_ca_bundle.py
    py -3.12 -m platformio run -e st7789</code></li>
-<li>הסקריפט מדפיס כמה תעודות נכללו ומוודא שתעודות "proxy" של סביבת פיתוח לא נכנסו.</li>
-<li>התקן עם <code>install.bat</code> (או אפשרות 5 – עדכון אפליקציה בלבד, שומר Wi‑Fi והגדרות) – לשם כך יש להכין חבילה עם <code>tools/make_release.py</code>.</li>
+<li>The script prints how many certificates were included and checks that no development-environment "proxy" certificates got in.</li>
+<li>Install with <code>install.bat</code> (or option 5 – app-only update, which keeps Wi‑Fi and settings). For that, build a package with <code>tools/make_release.py</code>.</li>
 </ol>
-<h2>למה לא "הצמדה" לתעודה אחת?</h2>
-<p>הצמדה (pinning) לתעודה ספציפית של השרת הייתה נשברת בכל חידוש תעודה (כל כמה חודשים). מאגר שורשים מלא + בדיקת שם שרת + בדיקת תוקף מול שעון NTP נותן אבטחה טובה ויציבות לאורך זמן.</p></main></body></html>
+<h2>Why not "pin" a single certificate?</h2>
+<p>Pinning the server's specific certificate would break on every certificate renewal (every few months). A full root store + server name check + validity check against the NTP clock gives good security and long-term stability.</p></main></body></html>

@@ -1,61 +1,63 @@
 # Gridline F1
 
-תצוגת פורמולה 1 שולחנית ועצמאית ללוח **ESP32-2432S028** (מסך מגע 2.8", ‏320×240 לרוחב).
-הקושחה מתחברת ל‑Wi‑Fi, מושכת נתונים אמיתיים מ‑[Jolpica‑F1 API](https://github.com/jolpica/jolpica-f1) ב‑HTTPS מאומת, ועובדת בלי מחשב אחרי ההתקנה.
+A standalone desktop Formula 1 display for the **ESP32-2432S028** board (2.8" touch screen, 320×240 landscape or 240×320 portrait).
+The firmware connects to Wi‑Fi, pulls live data from the [Jolpica‑F1 API](https://github.com/jolpica/jolpica-f1) over verified HTTPS, and runs on its own without a computer once installed.
 
-**מסכים:** המרוץ הבא (ספירה לאחור, שעון ישראל), טבלת נהגים, טבלת קבוצות, תוצאות המרוץ האחרון, לוח העונה, הגדרות ואבחון.
+**Screens:** next race (countdown in Israel time), driver standings, constructor standings, last race results, season calendar, settings and diagnostics.
 
 <p>
-  <img src="preview/screens/p01_next_race@2x.png" alt="המרוץ הבא" width="240">
-  <img src="preview/screens/p03_drivers_p1@2x.png" alt="טבלת נהגים" width="240">
-  <img src="preview/screens/p08_calendar@2x.png" alt="לוח העונה" width="240">
+  <img src="preview/screens/p01_next_race@2x.png" alt="Next race" width="240">
+  <img src="preview/screens/p03_drivers_p1@2x.png" alt="Driver standings" width="240">
+  <img src="preview/screens/p08_calendar@2x.png" alt="Season calendar" width="240">
 </p>
 
-## הורדה והתקנה
+More screenshots: [preview/index.html](preview/index.html) (open the file locally, or browse [preview/screens](preview/screens)).
 
-החבילה המוכנה (קושחה, תוכנת התקנה ל‑Windows, מדריך ומודלים להדפסה) נמצאת ב‑[Releases](../../releases/latest).
-מורידים את קובץ ה‑ZIP מהגרסה האחרונה, מחלצים, ופותחים את `software/START-HERE.html`.
+## Download and install
 
-| מסמך | תוכן |
+The ready-to-use package (firmware, Windows installer, guide and 3D models) is on the [Releases](../../releases/latest) page.
+Download the ZIP from the latest release, extract it, and open `software/START-HERE.html`.
+
+| Document | Contents |
 |---|---|
-| [docs/START-HERE.md](docs/START-HERE.md) | התחלה מהירה |
-| [docs/HEBREW-GUIDE.md](docs/HEBREW-GUIDE.md) | מדריך התקנה ושימוש מלא + פתרון בעיות |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | ארכיטקטורה, פינים, מחיצות, אבטחה, מקור נתונים |
-| [docs/VALIDATION.md](docs/VALIDATION.md) | דוח בדיקות כן: מה נבדק, ומה עוד דורש את הלוח |
-| [docs/CA-CERTIFICATES.md](docs/CA-CERTIFICATES.md) | עדכון תעודות TLS בעתיד |
-| [docs/THIRD-PARTY-NOTICES.md](docs/THIRD-PARTY-NOTICES.md) | רישיונות |
+| [docs/START-HERE.md](docs/START-HERE.md) | Quick start |
+| [docs/GUIDE.md](docs/GUIDE.md) | Full install and user guide, with troubleshooting |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Architecture, pinout, partitions, security, data source |
+| [docs/VALIDATION.md](docs/VALIDATION.md) | Honest test report: what was tested, and what still needs the real board |
+| [docs/CA-CERTIFICATES.md](docs/CA-CERTIFICATES.md) | Updating the TLS certificates in the future |
+| [docs/THIRD-PARTY-NOTICES.md](docs/THIRD-PARTY-NOTICES.md) | Licenses |
 
-## המעמד המודפס
+## 3D-printed stand
 
-| קובץ | מה הוא |
+| File | What it is |
 |---|---|
-| [hardware/F1_screen.3mf](hardware/F1_screen.3mf) | פרויקט Bambu Studio עם שני החלקים על המשטח, מוכן לפריסה |
-| [hardware/Gridline_Stand_Portrait_Body.stl](hardware/Gridline_Stand_Portrait_Body.stl) | גוף המעמד (לאורך), כ‑66×148×62 מ"מ |
-| [hardware/Gridline_Lid.stl](hardware/Gridline_Lid.stl) | המכסה האחורי עם חריצי אוורור, כ‑92×56×9 מ"מ |
+| [hardware/F1_screen.3mf](hardware/F1_screen.3mf) | Bambu Studio project with both parts on the plate, ready to slice |
+| [hardware/Gridline_Stand_Portrait_Body.stl](hardware/Gridline_Stand_Portrait_Body.stl) | Stand body (portrait), about 66 × 148 × 62 mm |
+| [hardware/Gridline_Lid.stl](hardware/Gridline_Lid.stl) | Back lid with vent slots, about 92 × 56 × 9 mm |
 
-הגדרות הדפסה: Bambu Lab X2D עם פיה 0.4 מ"מ, ‏PETG, שכבה 0.2 מ"מ, מילוי 15%, בלי תמיכות.
+Print settings: Bambu Lab X2D with a 0.4 mm nozzle, PETG, 0.2 mm layers, 15% infill, no supports.
 
-## מבנה
+## Project layout
 ```
-src/                 קושחה (ממשק, רשת, הגדרת Wi-Fi, תצוגה, מגע, אחסון)
-lib/gridline_core/   לוגיקה טהורה ונבדקת: זמן, HTTP, JSON, תזמון, מטמון, כיול
-test/host/           בדיקות יחידה למחשב        test/sim/  סימולטור ממשק
-test/installer/      בדיקות תוכנת ההתקנה      test/emulator/  בניית בדיקה ל-QEMU
-installer/           תוכנת ההתקנה ל-Windows (Python + קבצי bat + wheels)
-tools/               בנייה, בדיקות, פונטים, תעודות, חבילת שחרור
-hardware/            מודלים להדפסת המעמד והמכסה
+src/                 firmware (UI, networking, Wi-Fi setup, display, touch, storage)
+lib/gridline_core/   pure, tested logic: time, HTTP, JSON, scheduling, cache, calibration
+test/host/           unit tests for the PC          test/sim/       UI simulator
+test/installer/      installer tests                test/emulator/  QEMU test build
+installer/           Windows installer (Python + .bat files + wheels)
+tools/               build, tests, fonts, certificates, release package
+hardware/            3D models for the stand and lid
 ```
 
-## בנייה
+## Building
 ```
 pip install platformio==6.1.18
-pio run -e st7789                  # יעד ראשי
-pio run -e ili9341                 # חלופה
-./tools/run_host_tests.sh          # בדיקות יחידה
-./tools/run_simulator.sh           # צילומי מסך מהסימולטור
-python3 tools/make_release.py      # חבילת Windows מלאה
+pio run -e st7789                  # main target
+pio run -e ili9341                 # alternative display
+./tools/run_host_tests.sh          # unit tests
+./tools/run_simulator.sh           # screenshots from the simulator
+python3 tools/make_release.py      # full Windows package
 ```
 
-עיצוב: Roei Rosenberg, Industrial Designer.
+Design: Roei Rosenberg, Industrial Designer.
 
-פרויקט אישי לא רשמי. Formula 1 ו‑F1 הם סימנים מסחריים של Formula One Licensing B.V.
+Unofficial personal project. Formula 1 and F1 are trademarks of Formula One Licensing B.V.

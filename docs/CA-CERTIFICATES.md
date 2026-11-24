@@ -1,26 +1,26 @@
-# עדכון תעודות האבטחה (CA) בעתיד
+# Updating the security certificates (CA) in the future
 
-הקושחה מכילה מאגר של תעודות שורש ציבוריות (Root CA) שבעזרתו היא מוודאת שהיא באמת מדברת עם `api.jolpi.ca`.
+The firmware contains a store of public root certificates (Root CAs) that it uses to verify that it is really talking to `api.jolpi.ca`.
 
-- מקור: מאגר התעודות של Mozilla, כפי שהוא נארז בחבילת Python ‏`certifi`.
-- הגרסה הנוכחית: `certifi 2026.10.18`, ‏117 תעודות (מוצג במסך About ← TLS trust).
-- הפורמט: ה‑bundle של ESP‑IDF (‏`x509_crt_bundle`) שנטען עם `WiFiClientSecure::setCACertBundle()`.
-- הקובץ שנוצר: `src/certs/ca_bundle.h`.
+- Source: Mozilla's certificate store, as packaged in the Python `certifi` package.
+- Current version: `certifi 2026.10.18`, 117 certificates (shown on the About → TLS trust screen).
+- Format: the ESP‑IDF bundle (`x509_crt_bundle`), loaded with `WiFiClientSecure::setCACertBundle()`.
+- Generated file: `src/certs/ca_bundle.h`.
 
-## מתי צריך לעדכן?
-- תעודות שורש מתחלפות לאט (שנים). מאגר מלא של Mozilla מכסה גם מעבר של השרת לרשות תעודות אחרת.
-- אם יום אחד מופיע `TLS error` קבוע, השעון ב‑About מסונכרן, ובלוג (`serial-monitor.bat`) יש שגיאת אימות תעודה – כנראה הגיע הזמן לעדכן.
+## When does it need updating?
+- Root certificates change slowly (over years). The full Mozilla store also covers the server moving to a different certificate authority.
+- If a persistent `TLS error` appears one day, the clock on the About screen is synced, and the log (`serial-monitor.bat`) shows a certificate verification error – it is probably time to update.
 
-## איך מעדכנים (על Windows)
-1. הורד את קוד המקור (`source/gridline-f1-source-v1.2.0.zip`) וחלץ.
-2. בתיקיית הפרויקט:
+## How to update (on Windows)
+1. Download the source code (`source/gridline-f1-source-v1.2.0.zip`) and extract it.
+2. In the project folder:
    ```
    py -3.12 -m pip install --upgrade certifi cryptography platformio==6.1.18
    py -3.12 tools\gen_ca_bundle.py
    py -3.12 -m platformio run -e st7789
    ```
-3. הסקריפט מדפיס כמה תעודות נכללו ומוודא שתעודות "proxy" של סביבת פיתוח לא נכנסו.
-4. התקן עם `install.bat` (או אפשרות 5 – עדכון אפליקציה בלבד, שומר Wi‑Fi והגדרות) – לשם כך יש להכין חבילה עם `tools/make_release.py`.
+3. The script prints how many certificates were included and checks that no development-environment "proxy" certificates got in.
+4. Install with `install.bat` (or option 5 – app-only update, which keeps Wi‑Fi and settings). For that, build a package with `tools/make_release.py`.
 
-## למה לא "הצמדה" לתעודה אחת?
-הצמדה (pinning) לתעודה ספציפית של השרת הייתה נשברת בכל חידוש תעודה (כל כמה חודשים). מאגר שורשים מלא + בדיקת שם שרת + בדיקת תוקף מול שעון NTP נותן אבטחה טובה ויציבות לאורך זמן.
+## Why not "pin" a single certificate?
+Pinning the server's specific certificate would break on every certificate renewal (every few months). A full root store + server name check + validity check against the NTP clock gives good security and long-term stability.

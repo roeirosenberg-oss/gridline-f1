@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gridline F1 – Install and user guide</title><style>
+:root{--bg:#ffffff;--fg:#14171c;--dim:#5b6573;--line:#e3e6eb;--card:#f6f7f9;--acc:#e5352b;--code:#eef0f3}
+@media (prefers-color-scheme: dark){:root{--bg:#0b0d11;--fg:#eef1f5;--dim:#9aa3b1;--line:#262c37;--card:#141922;--acc:#ff4a3d;--code:#1b212c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+main{max-width:920px;margin:0 auto;padding:28px 18px 64px}
+h1{font-size:28px;margin:0 0 8px;border-bottom:3px solid var(--acc);padding-bottom:8px}
+h2{font-size:21px;margin:34px 0 10px;padding-top:6px}
+h3{font-size:17px;margin:24px 0 8px}
+a{color:var(--acc)}
+code,pre{font-family:Consolas,"Cascadia Mono",monospace;background:var(--code);border-radius:5px;direction:ltr;unicode-bidi:isolate}
+code{padding:1px 5px;font-size:.92em}
+pre{padding:12px;overflow:auto;text-align:left}
+pre code{background:none;padding:0}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:15px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;vertical-align:top}
+th{background:var(--card);text-align:start}
+blockquote{margin:14px 0;padding:10px 14px;background:var(--card);border-inline-start:4px solid var(--acc);border-radius:6px}
+blockquote p{margin:0}
+hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+.nav{font-size:14px;color:var(--dim);margin-bottom:18px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}
+figure img{width:100%;image-rendering:pixelated;border-radius:6px;display:block;background:#000}
+figcaption{font-size:14px;color:var(--dim);margin-top:8px}
+</style></head>
+<body><main><div class="nav"><a href="../START-HERE.html">Quick start</a> · <a href="GUIDE.html">Guide</a> · <a href="ARCHITECTURE.html">Architecture</a> · <a href="VALIDATION.html">Test report</a> · <a href="CA-CERTIFICATES.html">Certificates</a> · <a href="../preview/index.html">Screenshots</a></div><h1>Gridline F1 – Install and user guide</h1>
+<p>Gridline F1 is a new, standalone firmware that turns the ESP32 touch-screen board (ESP32-2432S028) into a desktop Formula 1 display. The board connects to Wi‑Fi on its own, pulls real data from the Jolpica‑F1 API, and runs without a computer once installed.</p>
+<blockquote>
+<p>Unofficial personal project. Formula 1 and F1 are trademarks of Formula One Licensing B.V.</p>
+</blockquote>
+<hr />
+<h2>1. What you need before you start</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A Windows computer</td>
+<td>With Python 3.12 that runs as <code>py -3.12</code></td>
+</tr>
+<tr>
+<td>A USB data cable</td>
+<td>A charge-only cable will <strong>not</strong> work. The board has both Micro‑USB and USB‑C – either one is fine</td>
+</tr>
+<tr>
+<td>A 2.4GHz Wi‑Fi network</td>
+<td>The ESP32 does <strong>not</strong> support 5GHz. Most home routers also have a 2.4GHz network</td>
+</tr>
+<tr>
+<td>A phone</td>
+<td>To set up the display's Wi‑Fi</td>
+</tr>
+<tr>
+<td>About 15 minutes</td>
+<td>Including a full backup of the existing firmware</td>
+</tr>
+</tbody>
+</table>
+<h3>⚠️ Important: what gets erased</h3>
+<p>Gridline F1 is a completely new project with its own memory layout (partition table). Installing it <strong>erases the board's entire memory</strong>: the existing firmware, the Wi‑Fi password saved in it, the touch calibration and all settings. They cannot be carried over – after installing you calibrate the screen again and re-enter the Wi‑Fi (about 2 minutes).</p>
+<p>That's why the installer <strong>offers a full backup</strong> (4MB) of what is on the board today. Saying yes is strongly recommended. With the backup you can always go back to exactly the previous state.</p>
+<hr />
+<h2>2. Installation – step by step</h2>
+<h3>Step 1 – Extract the file</h3>
+<ol>
+<li>Right-click the package ZIP (for example <code>Gridline-F1-v1.2.0-windows.zip</code>) → <strong>Extract All</strong>.</li>
+<li>Open the folder that was created (for example <code>Gridline-F1-v1.2.0</code>).</li>
+</ol>
+<blockquote>
+<p>Don't run the files from inside the ZIP without extracting – it won't work.</p>
+</blockquote>
+<h3>Step 2 – Connect the board</h3>
+<ol>
+<li>Connect the board to the computer with a USB cable.</li>
+<li>(Optional check) Open <strong>Device Manager</strong> → <strong>Ports (COM &amp; LPT)</strong>. You should see <code>USB-SERIAL CH340 (COMx)</code>. The COM number can vary – the installer finds it on its own.</li>
+</ol>
+<h3>Step 3 – Run the installer</h3>
+<ol>
+<li>Double-click <strong><code>install.bat</code></strong>.</li>
+<li>The first time only, you'll see <code>Preparing the installer</code> – the installer sets up a private Python environment from the files in the package (no internet needed, about half a minute).</li>
+</ol>
+<p>Here is what you will see and how to answer:</p>
+<table>
+<thead>
+<tr>
+<th>What appears on screen</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>What would you like to do?</code></td>
+<td>Type <code>1</code> and press Enter (Install Gridline F1)</td>
+</tr>
+<tr>
+<td><code>Checking firmware files</code> … <code>OK</code></td>
+<td>Automatic check of the files (SHA‑256, size, structure). If <code>FAILED</code> appears – download the package again</td>
+</tr>
+<tr>
+<td><code>Choose the display type and orientation</code></td>
+<td>Type <code>1</code> for <strong>landscape</strong> or <code>2</code> for <strong>portrait</strong> (both are ST7789 – the right choice for this board). You can change it later in Settings</td>
+</tr>
+<tr>
+<td><code>Found: COM5 (USB-SERIAL CH340)</code> <code>Use COM5?</code></td>
+<td>Press Enter (yes)</td>
+</tr>
+<tr>
+<td><code>Board OK: classic ESP32, 4 MB flash</code></td>
+<td>The board was detected successfully</td>
+</tr>
+<tr>
+<td><code>Make a full backup … ? (Y/n)</code></td>
+<td>Press Enter (yes). The backup takes 2–6 minutes and is saved in the <code>backups</code> folder</td>
+</tr>
+<tr>
+<td><code>Erase the board and install Gridline F1 now? (Y/n)</code></td>
+<td>Press Enter (yes)</td>
+</tr>
+<tr>
+<td><code>Erasing the flash</code>, then <code>Writing Gridline F1</code></td>
+<td>Wait. At the end esptool verifies the write (hash)</td>
+</tr>
+<tr>
+<td><code>Open the serial monitor … ? (Y/n)</code></td>
+<td>Enter opens a log window (optional). To close it: Ctrl+C</td>
+</tr>
+</tbody>
+</table>
+<p>If you chose not to back up, the installer asks you to type <code>SKIP</code> in capital letters – anything else cancels without changing anything.</p>
+<h3>Step 4 – Calibrate the touch screen (on first boot)</h3>
+<ol>
+<li>The screen shows <code>TOUCH CALIBRATION</code> with a target (a cross in a circle).</li>
+<li>Touch the <strong>center</strong> of each target – preferably with a fingernail or a plastic stylus (it is a resistive, press-type touch screen, not capacitive). There are 5 targets.</li>
+<li>At the end a check target (<code>CHECK</code>) appears. Touch it. If the accuracy is good, <code>CALIBRATION SAVED</code> appears.</li>
+<li>If <code>NOT ACCURATE ENOUGH</code> or <code>CHECK FAILED</code> appears, the process starts again automatically.</li>
+</ol>
+<h3>Step 5 – Set up Wi‑Fi from your phone</h3>
+<p>After calibration the display switches to the <code>WI-FI SETUP</code> screen and shows:
+- A temporary network name, for example <code>GRIDLINE-7F3A</code>
+- A readable temporary password (without confusing characters like 0/O or 1/l), for example <code>mx7k-p4ra</code>
+- A QR code</p>
+<ol>
+<li>On the phone: <strong>Settings → Wi‑Fi</strong> → join the <code>GRIDLINE-....</code> network with the password on the screen (or scan the QR code with the camera).</li>
+<li>The setup page usually opens by itself. If not, open a browser and go to <strong><code>http://192.168.4.1</code></strong>.</li>
+<li>Pick your home network from the list (or type its name), enter the Wi‑Fi password and tap <strong>Connect</strong>.</li>
+<li>If everything is fine, the phone shows <code>Connected!</code> and the display shows <code>Connected to … - restarting</code>. The display restarts and begins downloading data.</li>
+<li>If <code>Wrong password?</code> or <code>Network not found (is it 2.4 GHz?)</code> appears, fix it and try again. The phone may drop off the GRIDLINE network during the check; just join it again.</li>
+</ol>
+<p><strong>Your home Wi‑Fi password is stored only in the board's memory and is never written to the logs.</strong></p>
+<h3>Step 6 – That's it!</h3>
+<p>From here on the display runs on its own. You can power it from a regular USB phone charger.</p>
+<hr />
+<h2>3. Everyday use</h2>
+<h3>Landscape or portrait</h3>
+<p>There are two firmware versions, and both include exactly the same screens:
+- <strong>Landscape (320×240):</strong> the tab bar is at the bottom, and settings are under the ☰ icon in the bottom-right corner.
+- <strong>Portrait (240×320):</strong> the header has two rows (screen name and the ☰ settings button on top, status and time below). The countdown is a large 2×2 grid, and tables show 10 rows per page with paging arrows at the bottom.</p>
+<p>You can switch between orientations at any time without a computer: <strong>Settings → Orientation → Wide / Tall</strong> (one tap). If the picture is upside down relative to how the board stands, turn on <strong>Upside down</strong>.</p>
+<p>The navigation bar at the bottom of the screen:</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>NEXT</strong></td>
+<td>The next race: name, circuit, country, countdown, race date and start time <strong>in Israel time</strong>, and the next session. Tapping the countdown area shows the full weekend schedule</td>
+</tr>
+<tr>
+<td><strong>DRIVERS</strong></td>
+<td>Driver standings (position, code, name, team, points). Tapping a row offers to mark that driver as your favorite</td>
+</tr>
+<tr>
+<td><strong>TEAMS</strong></td>
+<td>Constructor standings with a relative points bar</td>
+</tr>
+<tr>
+<td><strong>RESULTS</strong></td>
+<td>Last race results, including times and retirements (DNF/DSQ/DNS)</td>
+</tr>
+<tr>
+<td><strong>CALENDAR</strong></td>
+<td>The season calendar. The next race is marked <code>NEXT</code>, finished races with ✓. Tapping a race shows all its sessions</td>
+</tr>
+<tr>
+<td>☰ (right-hand icon; in portrait – top right)</td>
+<td>Settings</td>
+</tr>
+</tbody>
+</table>
+<p>The ▲ ▼ arrows on the right switch pages.</p>
+<h3>What the status messages mean (top corner)</h3>
+<table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Updated 16:05</code> (green dot)</td>
+<td>The data was downloaded from the internet at this time</td>
+</tr>
+<tr>
+<td><code>Cached · 16:05</code> (orange)</td>
+<td>Saved data from memory is shown (for example after a restart) – not updated yet</td>
+</tr>
+<tr>
+<td><code>Offline · 16:05</code> (red)</td>
+<td>No Wi‑Fi; the last saved data is shown</td>
+</tr>
+<tr>
+<td><code>Connecting</code> / <code>Syncing clock</code> / <code>Updating</code></td>
+<td>Connecting / syncing the clock / downloading data</td>
+</tr>
+<tr>
+<td><code>TLS error · …</code></td>
+<td>The secure connection failed (see Troubleshooting)</td>
+</tr>
+<tr>
+<td><code>Rate limited</code></td>
+<td>The server asked to slow down; the display will retry automatically later</td>
+</tr>
+<tr>
+<td><code>No data yet</code></td>
+<td>The data hasn't been published yet (for example before the season starts)</td>
+</tr>
+</tbody>
+</table>
+<p>The display <strong>never replaces good data with bad data</strong>: if a download fails, the previous data stays and is marked accordingly.</p>
+<h3>How often the display updates</h3>
+<ul>
+<li>Between race weekends: the season calendar every 6 hours, standings and results every 3–6 hours.</li>
+<li>On a race weekend: every hour, and after the race every 10 minutes until the results are published.</li>
+<li>After a failure: gradual retries (30 seconds, 1 minute, 2, 5, 10… up to 30 minutes).
+This is far below the server's limits (500 requests per hour).</li>
+</ul>
+<h3>Between seasons</h3>
+<p>After the last race, <code>SEASON COMPLETE</code> is shown with the champion (once the final standings are available) and a note that next season's calendar hasn't been published yet. As soon as it is published, the next race appears automatically. At the start of a year, until there is data for the new season, the final standings of the previous season are shown (the year appears in the title).</p>
+<hr />
+<h2>4. Settings (☰)</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Brightness</strong></td>
+<td>Screen brightness (– / +)</td>
+</tr>
+<tr>
+<td><strong>Orientation</strong></td>
+<td>Screen orientation: <strong>Wide</strong> = landscape, <strong>Tall</strong> = portrait. One tap switches immediately, and the setting is saved. The touch calibration stays valid</td>
+</tr>
+<tr>
+<td><strong>Upside down</strong></td>
+<td>Rotates the picture 180° – for when the board stands upside down</td>
+</tr>
+<tr>
+<td><strong>Night dimming</strong></td>
+<td>Automatic dimming at night by Israel time: start time, end time and night brightness level</td>
+</tr>
+<tr>
+<td><strong>Accent</strong></td>
+<td>Accent color (6 options)</td>
+</tr>
+<tr>
+<td><strong>Favorite driver</strong></td>
+<td>Favorite driver – highlighted in the tables and on the NEXT screen</td>
+</tr>
+<tr>
+<td><strong>Wi-Fi</strong></td>
+<td>Opens the Wi‑Fi setup screen again (for example when you replace your router). The current network is kept until you choose a new one</td>
+</tr>
+<tr>
+<td><strong>Touch calibration</strong></td>
+<td>Recalibrate the touch screen</td>
+</tr>
+<tr>
+<td><strong>Refresh data now</strong></td>
+<td>Refresh immediately (at most once a minute)</td>
+</tr>
+<tr>
+<td><strong>About &amp; diagnostics</strong></td>
+<td>Version, Wi‑Fi, clock, the status of each data source, memory, and a TLS self-test</td>
+</tr>
+<tr>
+<td><strong>Restart display</strong></td>
+<td>Restart</td>
+</tr>
+</tbody>
+</table>
+<p>Settings are stored in the board's memory and survive power-off. They are written to memory only when something changed (a few seconds after the last change) so the memory doesn't wear out.</p>
+<h3>Shortcuts without a computer</h3>
+<ul>
+<li><strong>Open Wi‑Fi setup:</strong> long-press (3 seconds) the <strong>BOOT</strong> button on the board while the display is running. When <code>Release to open Wi-Fi setup</code> appears, let go.</li>
+<li><strong>Recalibrate touch when touch doesn't respond:</strong> touch and hold the screen while it boots (about 3 seconds, until <code>Keep touching to recalibrate</code> appears).</li>
+</ul>
+<hr />
+<h2>5. Troubleshooting</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>install.bat</code> says <code>py</code> was not found</td>
+<td>Install Python 3.12 from python.org and tick "Add python.exe to PATH"</td>
+</tr>
+<tr>
+<td><code>No USB-SERIAL CH340 device was found</code></td>
+<td>1) Try another cable (a data cable). 2) Try the board's other port (Micro‑USB), or USB‑C with a USB‑A to C cable. 3) If there is no CH340 in Device Manager, install WCH's CH340 driver (CH341SER) and restart</td>
+</tr>
+<tr>
+<td><code>Failed to connect</code> / the install is stuck at <code>Connecting...</code></td>
+<td>Hold the <strong>BOOT</strong> button, press and release <strong>RST</strong>, release BOOT, and run again. The installer also retries automatically at a lower speed</td>
+</tr>
+<tr>
+<td>The screen is black after installing</td>
+<td>Open <code>serial-monitor.bat</code> and check that <code>BOOT</code> lines appear. If there are logs but the screen is dark, try the ILI9341 version (see section 6)</td>
+</tr>
+<tr>
+<td>Inverted/strange colors</td>
+<td>The display settings need tuning – open an issue on GitHub with a photo of the screen</td>
+</tr>
+<tr>
+<td>Touch isn't accurate</td>
+<td>Settings → Touch calibration, or hold the screen during boot</td>
+</tr>
+<tr>
+<td><code>Network not found</code> in Wi‑Fi setup</td>
+<td>Make sure it is a 2.4GHz network and that the board is close to the router</td>
+</tr>
+<tr>
+<td>Persistent <code>TLS error</code></td>
+<td>Check on the About screen that the clock is <code>synced</code>. If the clock is fine and the error persists, save a log from <code>serial-monitor.bat</code> and open an issue on GitHub</td>
+</tr>
+<tr>
+<td><code>Rate limited</code></td>
+<td>Nothing to do – it retries automatically</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Logs:</strong> <code>serial-monitor.bat</code> shows the board's log (115200 baud) and saves it in the <code>logs</code> folder. The log contains no passwords.</p>
+<hr />
+<h2>6. More installer options</h2>
+<table>
+<thead>
+<tr>
+<th>Menu option</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>2) Backup only</code></td>
+<td>Save a backup without changing anything</td>
+</tr>
+<tr>
+<td><code>3) Restore a backup</code></td>
+<td>Go back to the firmware that was on the board before the install (from the <code>backups</code> folder)</td>
+</tr>
+<tr>
+<td><code>4) Serial monitor</code></td>
+<td>View the log</td>
+</tr>
+<tr>
+<td><code>5) Update application only</code></td>
+<td>Update to a future version of Gridline F1 <strong>without</strong> erasing Wi‑Fi/calibration/settings. Works only on a board that already runs Gridline F1 – the installer checks this itself</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ILI9341 version:</strong> at the display type step, type <code>3</code> (landscape) or <code>4</code> (portrait). It is meant for boards with an ILI9341 controller. It has not been tested on a real board – use it only if the ST7789 version shows no picture.</p>
+<p><strong>Check files only:</strong> <code>verify-files.bat</code> checks the firmware files (SHA‑256, size, structure) without touching the board.</p>
+<h3>Firmware files (for advanced manual use)</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Address</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ST7789_FULL-INSTALL_merged_write-at-0x0.bin</code></td>
+<td><code>0x0</code></td>
+<td>Full install (after erasing), landscape</td>
+</tr>
+<tr>
+<td><code>ST7789_PORTRAIT_FULL-INSTALL_merged_write-at-0x0.bin</code></td>
+<td><code>0x0</code></td>
+<td>Full install, portrait</td>
+</tr>
+<tr>
+<td><code>ST7789_APP-ONLY_update_write-at-0x10000.bin</code></td>
+<td><code>0x10000</code></td>
+<td>App-only update, without erasing</td>
+</tr>
+<tr>
+<td><code>ST7789_part_bootloader_at-0x1000.bin</code></td>
+<td><code>0x1000</code></td>
+<td>Part of the merged file</td>
+</tr>
+<tr>
+<td><code>ST7789_part_partition-table_at-0x8000.bin</code></td>
+<td><code>0x8000</code></td>
+<td>Part of the merged file</td>
+</tr>
+</tbody>
+</table>
+<p>Flash settings: DIO, 40MHz, 4MB. Checksums: <code>SHA256SUMS.txt</code>.</p>
+<hr />
+<h2>7. Privacy and security (in short)</h2>
+<ul>
+<li>All communication with the data server is encrypted with HTTPS, with certificate chain and server name checks, plus a certificate validity check against a clock synced from the network. There is no fallback to insecure HTTP.</li>
+<li>The display doesn't start a secure connection before the clock is synced.</li>
+<li>The data comes from the Jolpica‑F1 API (free, no key, licensed CC BY‑NC‑SA 4.0). There is no middle server.</li>
+<li>Setup mode (Access Point) is protected by a new random password each time, and is active only during setup.</li>
+</ul></main></body></html>

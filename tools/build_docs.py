@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert docs/*.md into standalone HTML pages (Hebrew pages right-to-left)
+"""Convert docs/*.md into standalone HTML pages
 and build preview/index.html from the simulator screenshots.
 
     python3 tools/build_docs.py      (requires: pip install markdown)
@@ -49,9 +49,9 @@ PAGE = """<!doctype html>
 <body><main>{nav}{body}</main></body></html>
 """
 
-NAV_HE = ('<div class="nav"><a href="{p}START-HERE.html">התחלה מהירה</a> · <a href="{d}HEBREW-GUIDE.html">מדריך</a> · '
-          '<a href="{d}ARCHITECTURE.html">ארכיטקטורה</a> · <a href="{d}VALIDATION.html">דוח בדיקות</a> · '
-          '<a href="{d}CA-CERTIFICATES.html">תעודות</a> · <a href="{pr}index.html">צילומי מסך</a></div>')
+NAV = ('<div class="nav"><a href="{p}START-HERE.html">Quick start</a> · <a href="{d}GUIDE.html">Guide</a> · '
+       '<a href="{d}ARCHITECTURE.html">Architecture</a> · <a href="{d}VALIDATION.html">Test report</a> · '
+       '<a href="{d}CA-CERTIFICATES.html">Certificates</a> · <a href="{pr}index.html">Screenshots</a></div>')
 
 
 def convert(md_path, out_path, rtl, nav):
@@ -66,32 +66,32 @@ def convert(md_path, out_path, rtl, nav):
 
 
 CAPTIONS = {
-    "00_splash": "מסך פתיחה",
-    "01_next_race": "המרוץ הבא – ספירה לאחור, שעת זינוק בשעון ישראל, הסשן הבא, הנהג המועדף",
-    "02_next_weekend_schedule": "לוח הזמנים של סוף השבוע (נגיעה בספירה)",
-    "03_drivers_p1": "טבלת נהגים – הנהג המועדף מודגש",
-    "04_drivers_p2": "טבלת נהגים – עמוד 2",
-    "05_constructors": "טבלת קבוצות עם פס נקודות יחסי",
-    "06_last_race_results_p1": "תוצאות המרוץ האחרון",
-    "07_last_race_results_p3": "תוצאות – כולל פרישה (DNF)",
-    "08_calendar": "לוח העונה – המרוץ הבא מסומן NEXT",
-    "09_race_detail": "פרטי מרוץ עם כל הסשנים",
-    "10_settings_p1": "הגדרות",
-    "11_settings_p2": "הגדרות – עמוד 2",
-    "12_night_dimming": "עמעום לילה",
-    "13_favorite_picker": "בחירת נהג מועדף",
-    "14_about_p1": "About – מצב מקורות הנתונים",
-    "15_about_p2": "About – זיכרון, TLS, בדיקה עצמית",
-    "16_dialog": "דיאלוג אישור",
-    "17_next_live": "מרוץ בזמן אמת (LIVE)",
-    "18_next_same_day": "ביום המרוץ – שעות/דקות/שניות",
-    "19_season_complete": "סוף העונה – אלוף ולוח עונה הבאה שטרם פורסם",
-    "20_results_pending_notice": "תוצאות של מרוץ חדש יותר עוד לא פורסמו",
-    "21_offline_cached": "בלי אינטרנט – נתונים שמורים עם שעת העדכון",
-    "22_waiting_for_data": "ממתין לנתונים",
-    "23_wifi_not_set_up": "Wi‑Fi לא הוגדר",
-    "24_next_cyan_accent": "צבע הדגשה אחר",
-    "25_wifi_setup": "מסך הגדרת Wi‑Fi (שם וסיסמה לדוגמה; המכשיר יוצר סיסמה חדשה בכל פעם)",
+    "00_splash": "Splash screen",
+    "01_next_race": "Next race – countdown, start time in Israel time, next session, favorite driver",
+    "02_next_weekend_schedule": "Weekend schedule (tap the countdown)",
+    "03_drivers_p1": "Driver standings – favorite driver highlighted",
+    "04_drivers_p2": "Driver standings – page 2",
+    "05_constructors": "Constructor standings with a relative points bar",
+    "06_last_race_results_p1": "Last race results",
+    "07_last_race_results_p3": "Results – including retirements (DNF)",
+    "08_calendar": "Season calendar – next race marked NEXT",
+    "09_race_detail": "Race details with all sessions",
+    "10_settings_p1": "Settings",
+    "11_settings_p2": "Settings – page 2",
+    "12_night_dimming": "Night dimming",
+    "13_favorite_picker": "Favorite driver picker",
+    "14_about_p1": "About – status of the data sources",
+    "15_about_p2": "About – memory, TLS, self-test",
+    "16_dialog": "Confirmation dialog",
+    "17_next_live": "Race in progress (LIVE)",
+    "18_next_same_day": "On race day – hours/minutes/seconds",
+    "19_season_complete": "End of season – champion, and next season's calendar not yet published",
+    "20_results_pending_notice": "Results of a newer race not published yet",
+    "21_offline_cached": "No internet – cached data with the update time",
+    "22_waiting_for_data": "Waiting for data",
+    "23_wifi_not_set_up": "Wi‑Fi not set up",
+    "24_next_cyan_accent": "Different accent color",
+    "25_wifi_setup": "Wi‑Fi setup screen (sample name and password; the device creates a new password each time)",
 }
 
 
@@ -110,28 +110,29 @@ def gallery():
         return out
 
     land, port = figs(False), figs(True)
-    body = ("<h1>Gridline F1 – צילומי מסך</h1>"
-            "<blockquote><p>הצילומים נוצרו על ידי הרצת קוד הממשק האמיתי של הקושחה מול סימולטור תצוגה במחשב "
-            "(מוגדל פי 2), עם תשובות API אמיתיות של עונת 2023 ושעון מדומה ב‑2023. "
-            "זה <b>לא</b> צילום של הלוח הפיזי – הגוונים במסך האמיתי יכולים להיות מעט שונים.</p></blockquote>"
-            '<h2>לאורך (240×320)</h2><div class="gallery portrait">' + "".join(port) + "</div>"
-            '<h2>לרוחב (320×240)</h2><div class="gallery">' + "".join(land) + "</div>")
-    nav = NAV_HE.format(p="../", d="../docs/", pr="")
+    body = ("<h1>Gridline F1 – Screenshots</h1>"
+            "<blockquote><p>These screenshots were made by running the firmware's real UI code against a display "
+            "simulator on the PC (scaled 2×), with real API responses from the 2023 season and a simulated 2023 clock. "
+            "This is <b>not</b> a photo of the physical board – colors on the real screen may differ slightly.</p></blockquote>"
+            '<h2>Portrait (240×320)</h2><div class="gallery portrait">' + "".join(port) + "</div>"
+            '<h2>Landscape (320×240)</h2><div class="gallery">' + "".join(land) + "</div>")
+    nav = NAV.format(p="../", d="../docs/", pr="")
     css = CSS + ".gallery.portrait{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}"
     with open(os.path.join(PREVIEW, "index.html"), "w", encoding="utf-8") as f:
-        f.write(PAGE.format(lang="he", dir="rtl", title="Gridline F1 – צילומי מסך", css=css, nav=nav, body=body))
+        f.write(PAGE.format(lang="en", dir="ltr", title="Gridline F1 – Screenshots", css=css, nav=nav, body=body))
     return len(land) + len(port)
 
 
 def main():
     for md in sorted(glob.glob(os.path.join(DOCS, "*.md"))):
         name = os.path.splitext(os.path.basename(md))[0]
-        rtl = name != "THIRD-PARTY-NOTICES"
         if name == "START-HERE":
-            nav = NAV_HE.format(p="", d="docs/", pr="preview/")
+            nav = NAV.format(p="", d="docs/", pr="preview/")
+        elif name == "THIRD-PARTY-NOTICES":
+            nav = ""
         else:
-            nav = NAV_HE.format(p="../", d="", pr="../preview/") if rtl else ""
-        convert(md, os.path.join(DOCS, name + ".html"), rtl, nav)
+            nav = NAV.format(p="../", d="", pr="../preview/")
+        convert(md, os.path.join(DOCS, name + ".html"), False, nav)
         print("html:", name)
     print("gallery:", gallery(), "screens")
 

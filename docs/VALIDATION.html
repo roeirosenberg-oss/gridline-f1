@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8">
+<html lang="en" dir="ltr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>דוח בדיקות – Gridline F1 גרסה 1.2.0</title><style>
+<title>Test report – Gridline F1 version 1.2.0</title><style>
 :root{--bg:#ffffff;--fg:#14171c;--dim:#5b6573;--line:#e3e6eb;--card:#f6f7f9;--acc:#e5352b;--code:#eef0f3}
 @media (prefers-color-scheme: dark){:root{--bg:#0b0d11;--fg:#eef1f5;--dim:#9aa3b1;--line:#262c37;--card:#141922;--acc:#ff4a3d;--code:#1b212c}}
 *{box-sizing:border-box}
@@ -27,321 +27,321 @@ figure{margin:0;background:var(--card);border:1px solid var(--line);border-radiu
 figure img{width:100%;image-rendering:pixelated;border-radius:6px;display:block;background:#000}
 figcaption{font-size:14px;color:var(--dim);margin-top:8px}
 </style></head>
-<body><main><div class="nav"><a href="../START-HERE.html">התחלה מהירה</a> · <a href="HEBREW-GUIDE.html">מדריך</a> · <a href="ARCHITECTURE.html">ארכיטקטורה</a> · <a href="VALIDATION.html">דוח בדיקות</a> · <a href="CA-CERTIFICATES.html">תעודות</a> · <a href="../preview/index.html">צילומי מסך</a></div><h1>דוח בדיקות – Gridline F1 גרסה 1.2.0</h1>
-<p>תאריך: 24 באוקטובר 2026. הלוגים המלאים נמצאים בתיקייה <code>docs/validation-logs/</code>.</p>
+<body><main><div class="nav"><a href="../START-HERE.html">Quick start</a> · <a href="GUIDE.html">Guide</a> · <a href="ARCHITECTURE.html">Architecture</a> · <a href="VALIDATION.html">Test report</a> · <a href="CA-CERTIFICATES.html">Certificates</a> · <a href="../preview/index.html">Screenshots</a></div><h1>Test report – Gridline F1 version 1.2.0</h1>
+<p>Date: 24 October 2026. The full logs are in the <code>docs/validation-logs/</code> folder.</p>
 <blockquote>
-<p><strong>שורה תחתונה כנה:</strong> הקושחה נבנתה, נבדקה לעומק במחשב ובאמולטור, ונבדקה על ידי הרצת הבינארי האמיתי באמולטור ESP32. <strong>היא עדיין לא נבדקה על הלוח הפיזי שלך.</strong> קומפילציה מוצלחת ובדיקות אמולטור אינן הוכחה שהמסך, המגע, ה‑Wi‑Fi או ה‑TLS עובדים על הלוח – את זה נבדוק יחד בשלב הבא.</p>
+<p><strong>Honest bottom line:</strong> the firmware was built, tested thoroughly on the PC and in an emulator, and tested by running the real binary in an ESP32 emulator. <strong>At the time of this report it had not yet been tested on the physical board.</strong> A successful build and emulator tests are not proof that the screen, touch, Wi‑Fi or TLS work on the board – that is the next step. (Later on-board results are listed in the version sections at the end.)</p>
 </blockquote>
 <hr />
-<h2>חלק 1 – בדיקות שבוצעו במחשב הפיתוח שלי</h2>
-<h3>1.1 בנייה וקישור</h3>
+<h2>Part 1 – Tests run on the development machine</h2>
+<h3>1.1 Build and link</h3>
 <table>
 <thead>
 <tr>
-<th>בדיקה</th>
-<th>תוצאה</th>
+<th>Test</th>
+<th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>בניית <code>st7789</code> (‏PlatformIO, ‏espressif32 6.9.0, ‏arduino‑esp32 2.0.17)</td>
-<td>✅ הצליחה, 0 אזהרות בקוד הפרויקט עם <code>-Wall -Wextra</code></td>
+<td>Build <code>st7789</code> (PlatformIO, espressif32 6.9.0, arduino‑esp32 2.0.17)</td>
+<td>✅ Succeeded, 0 warnings in project code with <code>-Wall -Wextra</code></td>
 </tr>
 <tr>
-<td>בניית <code>ili9341</code></td>
-<td>✅ הצליחה</td>
+<td>Build <code>ili9341</code></td>
+<td>✅ Succeeded</td>
 </tr>
 <tr>
-<td>התאמה למחיצות</td>
-<td>✅ אפליקציה 1,376,080 בתים = 43.7% ממחיצת ה‑3MB; ‏RAM סטטי 75.5KB מתוך 320KB</td>
+<td>Fit in the partitions</td>
+<td>✅ App 1,376,080 bytes = 43.7% of the 3MB partition; static RAM 75.5KB of 320KB</td>
 </tr>
 <tr>
-<td>בדיקת הקובץ המאוחד (merged)</td>
-<td>✅ bootloader ב‑<code>0x1000</code>, טבלת מחיצות ב‑<code>0x8000</code> זהה ל‑CSV, אפליקציה ב‑<code>0x10000</code>; כותרת: DIO, ‏40MHz, ‏4MB; מזהה שבב = ESP32 קלאסי</td>
+<td>Check of the merged file</td>
+<td>✅ Bootloader at <code>0x1000</code>, partition table at <code>0x8000</code> identical to the CSV, app at <code>0x10000</code>; header: DIO, 40MHz, 4MB; chip ID = classic ESP32</td>
 </tr>
 </tbody>
 </table>
-<p>הערה: רישום PlatformIO (‏api.registry.platformio.org) היה חסום בסביבה שלי, ולכן חבילות הכלים הותקנו ידנית מאותם מקורות רשמיים ב‑GitHub (‏crosstool‑NG esp‑2021r2‑patch5, ‏arduino‑esp32 2.0.17, ‏esptool 4.5.1, ‏platform‑espressif32 v6.9.0). <code>platformio.ini</code> עצמו סטנדרטי ונבנה רגיל במחשב עם גישה לרישום.</p>
-<h3>1.2 בדיקות יחידה על המחשב – 42,664 בדיקות, 0 כשלים</h3>
-<p>הורצו עם AddressSanitizer ו‑UndefinedBehaviorSanitizer (<code>tools/run_host_tests.sh</code>).</p>
+<p>Note: the PlatformIO registry (api.registry.platformio.org) was blocked in the development environment, so the toolchain packages were installed manually from the same official sources on GitHub (crosstool‑NG esp‑2021r2‑patch5, arduino‑esp32 2.0.17, esptool 4.5.1, platform‑espressif32 v6.9.0). <code>platformio.ini</code> itself is standard and builds normally on a computer with registry access.</p>
+<h3>1.2 Unit tests on the PC – 42,664 tests, 0 failures</h3>
+<p>Run with AddressSanitizer and UndefinedBehaviorSanitizer (<code>tools/run_host_tests.sh</code>).</p>
 <table>
 <thead>
 <tr>
-<th>תחום</th>
-<th>מה נבדק</th>
+<th>Area</th>
+<th>What was tested</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>שעון ישראל ושעון קיץ</td>
-<td>כל מעברי השעון 2013–2045 מול tzdata ‏2026e (Python zoneinfo) – ‏33 שנים, 29,712 נקודות דגימה, כולל השעה הכפולה בסוף שעון הקיץ. כולל המעבר של <strong>מחר</strong>: 25.10.2026 ב‑02:00 ‏(23:00 UTC)</td>
+<td>Israel time and DST</td>
+<td>Every clock change 2013–2045 against tzdata 2026e (Python zoneinfo) – 33 years, 29,712 sample points, including the repeated hour at the end of DST. Including the change on <strong>the next day</strong>: 25.10.2026 at 02:00 (23:00 UTC)</td>
 </tr>
 <tr>
-<td>פענוח תאריכים</td>
-<td>תאריכים לא חוקיים, שנים מעוברות, שעות עם/בלי <code>Z</code>, שברי שניות, היסטים</td>
+<td>Date parsing</td>
+<td>Invalid dates, leap years, times with/without <code>Z</code>, fractional seconds, offsets</td>
 </tr>
 <tr>
-<td>קורא HTTP</td>
-<td>Content‑Length, ‏chunked (כולל הרחבות ו‑trailers), תגובות 100, ‏429 עם Retry‑After, כותרות פגומות/ארוכות/רבות מדי, gzip לא נתמך, חיבור שנסגר באמצע, timeout, גוף גדול מדי (נדחה לפני קריאה)</td>
+<td>HTTP reader</td>
+<td>Content‑Length, chunked (including extensions and trailers), 100 responses, 429 with Retry‑After, malformed/long/too many headers, unsupported gzip, connection closed midway, timeout, oversized body (rejected before reading)</td>
 </tr>
 <tr>
-<td>פענוח JSON – תשובות אמיתיות</td>
-<td>לוח עונה, טבלת נהגים, טבלת קבוצות, תוצאות מרוץ (ראה הערה על מקור הקבצים בהמשך)</td>
+<td>JSON parsing – real responses</td>
+<td>Season calendar, driver standings, constructor standings, race results (see the note on where the files come from below)</td>
 </tr>
 <tr>
-<td>מקרי קצה</td>
-<td>שדות <code>null</code>, שדות חסרים, מספרים במקום מחרוזות, נקודות עשרוניות, DNF/DSQ/DNS, רשימות ריקות, תוצאות שטרם פורסמו, עונה לא תואמת, סבבים כפולים</td>
+<td>Edge cases</td>
+<td><code>null</code> fields, missing fields, numbers instead of strings, decimal points, DNF/DSQ/DNS, empty lists, results not yet published, mismatched season, duplicate rounds</td>
 </tr>
 <tr>
-<td>קלט פגום</td>
-<td>JSON ריק, דף HTML של שגיאה, JSON קטוע, קינון עמוק, תגובה של 400 מרוצים (נדחית בתקציב זיכרון 48KB)</td>
+<td>Malformed input</td>
+<td>Empty JSON, an HTML error page, truncated JSON, deep nesting, a 400-race response (rejected by the 48KB memory budget)</td>
 </tr>
 <tr>
-<td>קיטוע</td>
-<td><strong>2,609 גרסאות קטועות</strong> של התשובות האמיתיות – אף אחת לא התקבלה כתקינה</td>
+<td>Truncation</td>
+<td><strong>2,609 truncated versions</strong> of the real responses – none was accepted as valid</td>
 </tr>
 <tr>
 <td>Fuzzing</td>
-<td>‏4,000 מוטציות אקראיות – ללא קריסה או שגיאת זיכרון</td>
+<td>4,000 random mutations – no crash or memory error</td>
 </tr>
 <tr>
-<td>צינור מלא</td>
-<td>HTTP ← פענוח, ב‑30 פיצולי חבילות שונים, chunked ורגיל</td>
+<td>Full pipeline</td>
+<td>HTTP → parsing, across 30 different packet splits, chunked and plain</td>
 </tr>
 <tr>
-<td>מטמון</td>
-<td>שמירה/טעינה, זיהוי כל היפוך ביט, קובץ קטוע, dataset שגוי</td>
+<td>Cache</td>
+<td>Save/load, detection of every bit flip, truncated file, wrong dataset</td>
 </tr>
 <tr>
-<td>ניסיונות חוזרים</td>
-<td>backoff עולה, תקרה של 30 דקות, jitter, ‏Retry‑After, ‏429</td>
+<td>Retries</td>
+<td>Increasing backoff, 30-minute cap, jitter, Retry‑After, 429</td>
 </tr>
 <tr>
-<td>תזמון</td>
-<td>הפעלה ראשונה, מטמון טרי, מעבר עונה, סוף שבוע מרוץ (רענון כל 10 דקות), חסימה גלובלית אחרי תקלת רשת</td>
+<td>Scheduling</td>
+<td>First boot, fresh cache, season rollover, race weekend (refresh every 10 minutes), global block after a network failure</td>
 </tr>
 <tr>
-<td>"המרוץ הבא"</td>
-<td>לפני העונה, יום הסשנים, מרוץ חי, אחרי מרוץ, סוף עונה, עונה הבאה, מרוץ בלי שעה</td>
+<td>"Next race"</td>
+<td>Before the season, session day, live race, after a race, end of season, next season, race without a time</td>
 </tr>
 <tr>
-<td>כיול מגע</td>
-<td>שחזור מיפוי מסובב/הפוך עם רעש, דחיית נקודות על קו ישר</td>
+<td>Touch calibration</td>
+<td>Recovering a rotated/flipped mapping with noise, rejecting points on a straight line</td>
 </tr>
 </tbody>
 </table>
-<h3>1.3 סימולטור ממשק – 26 צילומי מסך</h3>
-<p>קוד הממשק <strong>האמיתי</strong> (<code>ui*.cpp</code>, ‏<code>display.cpp</code>) קומפל מול מימוש framebuffer של TFT_eSPI שמחקה את מיקום הפונטים של הספרייה. הצילומים ב‑<code>preview/screens</code>. הסימולטור מצא ותיקנו: ערבוב צבעים שגוי, דיאלוג שלא נסגר במעבר מסך, טקסט דיאלוג קטוע, כותרת עמודה חתוכה ושאריות ציור בתחתית רשימות. קוד ה‑QR שבמסך ההגדרה פוענח בהצלחה (OpenCV) ל‑<code>WIFI:T:WPA;S:…;P:…;;</code>.</p>
-<h3>1.4 אמולטור ESP32 (QEMU של Espressif) – הבינארי המקומפל עצמו</h3>
+<h3>1.3 UI simulator – 26 screenshots</h3>
+<p>The <strong>real</strong> UI code (<code>ui*.cpp</code>, <code>display.cpp</code>) was compiled against a framebuffer implementation of TFT_eSPI that mimics the library's font placement. The screenshots are in <code>preview/screens</code>. The simulator found these issues, which were fixed: wrong color blending, a dialog that didn't close on screen change, truncated dialog text, a clipped column header and drawing leftovers at the bottom of lists. The QR code on the setup screen was decoded successfully (OpenCV) to <code>WIFI:T:WPA;S:…;P:…;;</code>.</p>
+<h3>1.4 ESP32 emulator (Espressif's QEMU) – the compiled binary itself</h3>
 <table>
 <thead>
 <tr>
-<th>תרחיש</th>
-<th>תוצאה</th>
+<th>Scenario</th>
+<th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>A – הפעלה ראשונה, פלאש ריק</td>
-<td>✅ bootloader ‏(DIO), אתחול, ‏<code>PSRAM none</code>, פרמוט LittleFS, אתחול התצוגה, מסך כיול המגע מתחיל</td>
+<td>A – first boot, empty flash</td>
+<td>✅ Bootloader (DIO), boot, <code>PSRAM none</code>, LittleFS format, display init, touch calibration screen starts</td>
 </tr>
 <tr>
-<td>B – הפעלה רגילה (NVS עם כיול ורשת לדוגמה)</td>
-<td>✅ טעינת כיול, זיהוי פרטי Wi‑Fi, הפעלת ממשק ומשימת רשת. ⚠️ נעצר בתוך אתחול רכיב הרדיו של ESP‑IDF (<code>register_chipv7_phy</code>) – <strong>מגבלה ידועה של QEMU</strong> שלא מדמה Wi‑Fi</td>
+<td>B – normal boot (NVS with sample calibration and network)</td>
+<td>✅ Calibration loaded, Wi‑Fi credentials detected, UI and network task started. ⚠️ Stops inside ESP‑IDF's radio init (<code>register_chipv7_phy</code>) – a <strong>known QEMU limitation</strong>, since it doesn't emulate Wi‑Fi</td>
 </tr>
 <tr>
-<td>C1 – בניית בדיקה (לא נכללת בחבילה) בלי רדיו</td>
-<td>✅ פענוח התשובות האמיתיות <strong>על מעבד ה‑Xtensa</strong> דרך קורא ה‑HTTP, דחיית JSON קטוע ודף HTML, אי‑דריסת נתונים טובים, כתיבה אטומית למטמון, שעון ישראל, לולאת ממשק רצה עם זיכרון יציב (כ‑256KB פנוי בלי Wi‑Fi)</td>
+<td>C1 – test build (not included in the package) without radio</td>
+<td>✅ Parsing the real responses <strong>on the Xtensa CPU</strong> through the HTTP reader, rejecting truncated JSON and an HTML page, not overwriting good data, atomic cache writes, Israel time, UI loop running with stable memory (about 256KB free without Wi‑Fi)</td>
 </tr>
 <tr>
-<td>C2 – הפעלה שנייה על אותו פלאש</td>
-<td>✅ המטמון שוחזר מ‑LittleFS</td>
+<td>C2 – second boot on the same flash</td>
+<td>✅ Cache restored from LittleFS</td>
 </tr>
 <tr>
-<td>בכל התרחישים</td>
-<td>✅ סיסמת ה‑Wi‑Fi לא הופיעה בלוג</td>
+<td>In all scenarios</td>
+<td>✅ The Wi‑Fi password did not appear in the log</td>
 </tr>
 </tbody>
 </table>
-<h3>1.5 תוכנת ההתקנה ל‑Windows</h3>
+<h3>1.5 Windows installer</h3>
 <table>
 <thead>
 <tr>
-<th>בדיקה</th>
-<th>תוצאה</th>
+<th>Test</th>
+<th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>חבילות Python אופליין</td>
-<td>✅ ‏13 קבצי wheel ל‑Windows x64 / Python 3.12 עם hash נעול; נבדקה פתירת תלויות ל‑Windows (נמצאה ותוקנה התנגשות bitstring/bitarray)</td>
+<td>Offline Python packages</td>
+<td>✅ 13 wheel files for Windows x64 / Python 3.12 with pinned hashes; dependency resolution for Windows was tested (a bitstring/bitarray conflict was found and fixed)</td>
 </tr>
 <tr>
-<td>אימות קבצי קושחה</td>
-<td>✅ SHA‑256, גודל, כותרות, כתובות, התאמה בין הקובץ המאוחד לחלקיו</td>
+<td>Firmware file verification</td>
+<td>✅ SHA‑256, size, headers, addresses, match between the merged file and its parts</td>
 </tr>
 <tr>
-<td>קובץ שעבר שינוי (ביט אחד)</td>
-<td>✅ נדחה</td>
+<td>A modified file (one bit)</td>
+<td>✅ Rejected</td>
 </tr>
 <tr>
-<td>זיהוי שבב ופלאש מפלט esptool</td>
-<td>✅ ‏ESP32‑D0WD‑V3/D0WDQ6/U4WDH מתקבלים, ‏S3/C3 נדחים, 4MB מזוהה (נמצא ותוקן באג בזיהוי)</td>
+<td>Chip and flash detection from esptool output</td>
+<td>✅ ESP32‑D0WD‑V3/D0WDQ6/U4WDH accepted, S3/C3 rejected, 4MB detected (a detection bug was found and fixed)</td>
 </tr>
 <tr>
-<td>זיהוי יציאת CH340</td>
-<td>✅ כולל שינוי מספר COM ויציאות נוספות במחשב</td>
+<td>CH340 port detection</td>
+<td>✅ Including a changed COM number and other ports on the computer</td>
 </tr>
 <tr>
-<td>תהליך התקנה (dry‑run)</td>
-<td>✅ ‏flash_id ← גיבוי 4MB ← מחיקה ← כתיבה ב‑<code>0x0</code> עם DIO/40m/4MB; בלי גיבוי נדרש <code>SKIP</code>; כל קלט אחר מבטל</td>
+<td>Install flow (dry run)</td>
+<td>✅ flash_id → 4MB backup → erase → write at <code>0x0</code> with DIO/40m/4MB; without a backup <code>SKIP</code> is required; any other input cancels</td>
 </tr>
 <tr>
-<td>‏ZIP</td>
-<td>✅ בדיקת CRC לכל קובץ + השוואת SHA‑256 לכל קובץ מול <code>SHA256SUMS.txt</code></td>
+<td>ZIP</td>
+<td>✅ CRC check for every file + SHA‑256 comparison of every file against <code>SHA256SUMS.txt</code></td>
 </tr>
 </tbody>
 </table>
-<h3>1.6 מקור הנתונים – מה נבדק ומה לא</h3>
+<h3>1.6 Data source – what was and wasn't tested</h3>
 <ul>
-<li><strong>נבדק:</strong> התיעוד הרשמי של Jolpica (‏נקודות קצה, מגבלות קצב 4/שנייה ו‑500/שעה, דרישת User‑Agent, ‏limit מרבי 100) וקוד השרת שלהם (איך <code>current</code>/<code>next</code>/<code>last</code> מחושבים, מתי <code>position</code> הוא <code>null</code>, ערכי <code>positionText</code> ‏R/D/W/F, נקודות עשרוניות). בעקבות זה "המרוץ הבא" מחושב במכשיר לפי השעון ולא לפי <code>next</code> של השרת.</li>
-<li><strong>קבצי הבדיקה:</strong> תשובות JSON אמיתיות מתוך חבילת בדיקות התאימות במאגר jolpica-f1 ב‑GitHub (commit מתועד ב‑<code>test/fixtures/jolpica/SOURCE_COMMIT.txt</code>). אלה תשובות במבנה Ergast/Jolpica של עונת 2023. בנוסף נבדקו תשובות שכתבתי לפי מבנה השרת הנוכחי (2025 ואילך).</li>
-<li><strong>לא נבדק:</strong> קריאה חיה ל‑<code>api.jolpi.ca</code> ובדיקת שרשרת התעודות האמיתית שלו – הגישה לדומיין הזה הייתה חסומה בסביבה שלי. השרשרת תודפס בלוג בהפעלה הראשונה על הלוח שלך.</li>
+<li><strong>Tested:</strong> Jolpica's official documentation (endpoints, rate limits of 4/second and 500/hour, User‑Agent requirement, maximum limit of 100) and their server code (how <code>current</code>/<code>next</code>/<code>last</code> are computed, when <code>position</code> is <code>null</code>, <code>positionText</code> values R/D/W/F, decimal points). As a result, the "next race" is computed on the device from the clock rather than from the server's <code>next</code>.</li>
+<li><strong>Test files:</strong> real JSON responses from the compatibility test suite in the jolpica-f1 repository on GitHub (the commit is recorded in <code>test/fixtures/jolpica/SOURCE_COMMIT.txt</code>). These are Ergast/Jolpica-format responses from the 2023 season. Responses written to match the current server format (2025 onward) were also tested.</li>
+<li><strong>Not tested:</strong> a live call to <code>api.jolpi.ca</code> and a check of its real certificate chain – access to that domain was blocked in the development environment. The chain is printed to the log on first boot on the board.</li>
 </ul>
 <hr />
-<h2>חלק 2 – בדיקות שבוצעו על ה‑ESP32 הפיזי שלך</h2>
-<p><strong>עדיין אין.</strong> הלוח שלך לא היה מחובר לסביבת הפיתוח, ולא כתבתי אליו דבר.</p>
+<h2>Part 2 – Tests run on the physical ESP32</h2>
+<p><strong>None yet at the time of this report.</strong> The board was not connected to the development environment, and nothing was written to it. (See the version sections below for the later on-board results.)</p>
 <hr />
-<h2>חלק 3 – בדיקות שעדיין דורשות את הלוח הפיזי</h2>
+<h2>Part 3 – Tests that still require the physical board</h2>
 <table>
 <thead>
 <tr>
 <th>#</th>
-<th>בדיקה</th>
-<th>איך נבדוק</th>
+<th>Test</th>
+<th>How to test</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>1</td>
-<td>ההתקנה עצמה (גיבוי, מחיקה, כתיבה)</td>
+<td>The install itself (backup, erase, write)</td>
 <td><code>install.bat</code></td>
 </tr>
 <tr>
 <td>2</td>
-<td>המסך מציג תמונה וצבעים נכונים (ST7789, ‏BGR, ללא היפוך)</td>
-<td>מסך הפתיחה והכיול – אדום הוא אדום</td>
+<td>The screen shows a picture with correct colors (ST7789, BGR, no inversion)</td>
+<td>Splash and calibration screens – red is red</td>
 </tr>
 <tr>
 <td>3</td>
-<td>תאורה אחורית ושינוי בהירות</td>
-<td>Settings ← Brightness</td>
+<td>Backlight and brightness changes</td>
+<td>Settings → Brightness</td>
 </tr>
 <tr>
 <td>4</td>
-<td>מגע: כיול, דיוק, אין לחיצות כפולות</td>
-<td>5 מטרות + בדיקה; ניווט בין לשוניות</td>
+<td>Touch: calibration, accuracy, no double taps</td>
+<td>5 targets + check; navigating between tabs</td>
 </tr>
 <tr>
 <td>5</td>
-<td>מצב הגדרת Wi‑Fi: רשת זמנית, דף ההגדרה, QR, חיבור ושמירה</td>
-<td>הטלפון</td>
+<td>Wi‑Fi setup mode: temporary network, setup page, QR, connecting and saving</td>
+<td>The phone</td>
 </tr>
 <tr>
 <td>6</td>
-<td>חיבור Wi‑Fi וסנכרון שעון</td>
-<td>הסטטוס <code>Syncing clock</code> ← <code>Updated</code>; ‏About ← Clock</td>
+<td>Wi‑Fi connection and clock sync</td>
+<td>Status <code>Syncing clock</code> → <code>Updated</code>; About → Clock</td>
 </tr>
 <tr>
 <td>7</td>
-<td>TLS אמיתי ל‑api.jolpi.ca, כולל השרשרת בלוג</td>
-<td><code>serial-monitor.bat</code> – שורות <code>TLS cert[...]</code></td>
+<td>Real TLS to api.jolpi.ca, including the chain in the log</td>
+<td><code>serial-monitor.bat</code> – <code>TLS cert[...]</code> lines</td>
 </tr>
 <tr>
 <td>8</td>
-<td>בדיקת TLS עצמית (שם שגוי / חתימה עצמית / שורש לא מוכר / פג תוקף נדחים)</td>
-<td>About ← Run TLS self-test, ‏<code>4/4 checks passed</code></td>
+<td>TLS self-test (wrong name / self-signed / unknown root / expired are rejected)</td>
+<td>About → Run TLS self-test, <code>4/4 checks passed</code></td>
 </tr>
 <tr>
 <td>9</td>
-<td>הנתונים האמיתיים של 2026 בכל חמשת המסכים</td>
-<td>השוואה מול אתר F1</td>
+<td>Real 2026 data on all five screens</td>
+<td>Compare with the F1 website</td>
 </tr>
 <tr>
 <td>10</td>
-<td>שעון ישראל אחרי מעבר לשעון חורף (25.10.2026)</td>
-<td>שעת המרוץ הבא</td>
+<td>Israel time after the switch to winter time (25.10.2026)</td>
+<td>Time of the next race</td>
 </tr>
 <tr>
 <td>11</td>
-<td>עבודה בלי אינטרנט: ניתוק הנתב ← <code>Offline</code> + נתונים שמורים, חזרה אוטומטית</td>
-<td>ניתוק/חיבור נתב</td>
+<td>Working without internet: router unplugged → <code>Offline</code> + cached data, automatic recovery</td>
+<td>Unplug/replug the router</td>
 </tr>
 <tr>
 <td>12</td>
-<td>הפעלה מחדש: נתונים שמורים מוצגים מיד כ‑<code>Cached</code></td>
-<td>ניתוק חשמל</td>
+<td>Restart: cached data shown immediately as <code>Cached</code></td>
+<td>Power cut</td>
 </tr>
 <tr>
 <td>13</td>
-<td>כפתור BOOT ‏(3 שניות) פותח הגדרת Wi‑Fi</td>
-<td>לחיצה ארוכה</td>
+<td>BOOT button (3 seconds) opens Wi‑Fi setup</td>
+<td>Long press</td>
 </tr>
 <tr>
 <td>14</td>
-<td>עמעום לילה</td>
-<td>Settings ← Night dimming</td>
+<td>Night dimming</td>
+<td>Settings → Night dimming</td>
 </tr>
 <tr>
 <td>15</td>
-<td>זיכרון ויציבות לאורך זמן עם Wi‑Fi ו‑TLS</td>
-<td>‏About ← Memory, ולוג <code>MEM</code> כל 10 דקות</td>
+<td>Memory and long-term stability with Wi‑Fi and TLS</td>
+<td>About → Memory, and the <code>MEM</code> log every 10 minutes</td>
 </tr>
 <tr>
 <td>16</td>
-<td>גרסת ILI9341</td>
-<td>רק אם ST7789 לא מציג תמונה</td>
+<td>ILI9341 version</td>
+<td>Only if ST7789 shows no picture</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2>מגבלות ידועות</h2>
+<h2>Known limitations</h2>
 <ul>
-<li>‏Wi‑Fi של 2.4GHz בלבד (מגבלת החומרה).</li>
-<li>אם רשת חוסמת NTP, השעון לא יסונכרן ולא יהיו עדכונים (בכוונה – תעודות לא נבדקות מול שעון לא מאומת).</li>
-<li>שינוי עתידי בחוק שעון הקיץ בישראל ידרוש עדכון קושחה.</li>
-<li>שמות קבוצות/צבעים: צבעי הקבוצות קבועים בקוד; קבוצה לא מוכרת מוצגת באפור עם השם מה‑API.</li>
-<li>ה‑API הוא פרויקט התנדבותי ללא התחייבות לזמינות; במקרה של תקלה מוצגים הנתונים השמורים.</li>
+<li>2.4GHz Wi‑Fi only (a hardware limitation).</li>
+<li>If a network blocks NTP, the clock won't sync and there will be no updates (on purpose – certificates are not checked against an unverified clock).</li>
+<li>A future change to Israel's DST law will require a firmware update.</li>
+<li>Team names/colors: team colors are fixed in code; an unknown team is shown in gray with the name from the API.</li>
+<li>The API is a volunteer project with no availability guarantee; if it is down, the cached data is shown.</li>
 </ul>
 <hr />
-<h2>שינויים בגרסה 1.0.1 (24.10.2026, אחרי הבדיקה הראשונה על הלוח)</h2>
+<h2>Changes in version 1.0.1 (24.10.2026, after the first test on the board)</h2>
 <ul>
-<li><strong>בדיקה על הלוח הפיזי (ממך):</strong> ההתקנה הצליחה (<code>Hash of data verified</code>), התצוגה והמגע עבדו עד מסך הגדרת ה‑Wi‑Fi, ודף ההגדרה נפתח בטלפון. החיבור לרשת נכשל עם <code>Network not found</code>.</li>
-<li><strong>תיקון:</strong> הגדרת ה‑Wi‑Fi מחכה עכשיו לסיום סריקה שרצה ברקע לפני ניסיון החיבור, מנסה עד 4 פעמים לפני שמכריזה "לא נמצא", משתמשת בשם המדויק (כולל אותיות גדולות/קטנות) ובערוץ מתוך תוצאות הסריקה, ומציגה את רשימת רשתות ה‑2.4GHz שהלוח רואה. הסריקה מודפסת גם ללוג.</li>
-<li>הבדיקות האוטומטיות (בנייה, בדיקות יחידה, סימולטור, אמולטור, תוכנת ההתקנה) הורצו שוב על גרסה זו. מצב הגדרת ה‑Wi‑Fi לא ניתן לבדיקה באמולטור (אין רדיו), ולכן נבדק רק על הלוח.</li>
+<li><strong>Test on the physical board:</strong> the install succeeded (<code>Hash of data verified</code>), the display and touch worked up to the Wi‑Fi setup screen, and the setup page opened on the phone. Connecting to the network failed with <code>Network not found</code>.</li>
+<li><strong>Fix:</strong> Wi‑Fi setup now waits for a background scan to finish before trying to connect, tries up to 4 times before declaring "not found", uses the exact name (including upper/lower case) and the channel from the scan results, and shows the list of 2.4GHz networks the board can see. The scan is also printed to the log.</li>
+<li>The automated tests (build, unit tests, simulator, emulator, installer) were run again on this version. Wi‑Fi setup mode can't be tested in the emulator (no radio), so it was tested only on the board.</li>
 </ul>
-<h2>שינויים בגרסה 1.0.2 (24.10.2026) – תיקון אימות התעודה של השרת</h2>
+<h2>Changes in version 1.0.2 (24.10.2026) – fix for verifying the server's certificate</h2>
 <ul>
-<li><strong>בדיקה על הלוח הפיזי (ממך), גרסה 1.0.1:</strong> חיבור ל‑Wi‑Fi הצליח (שם הרשת האמיתי הוא <code>"roei "</code> עם רווח בסוף – מה שהסביר את הכישלון בגרסה 1.0.0), ‏RSSI ‏‎-53 dBm, ‏NTP סונכרן (‏18:34 שעון ישראל, UTC+3 – נכון), זיכרון פנוי 191KB. בקשת ה‑HTTPS הראשונה נדחתה: <code>esp_crt_verify_callback(): Failed to verify certificate</code>, ‏mbedTLS ‏<code>-0x3000</code>.</li>
-<li><strong>אבחנה:</strong> השרת רץ על AWS. שרשרות של AWS (וגם של Google) מסתיימות בעותק "חתום‑צולב" של תעודת שורש מהימנה (למשל Starfield Services Root G2) שהונפק על ידי שורש ישן ש‑Mozilla הסירה (Starfield Class 2). קוד אימות ה‑bundle ב‑arduino‑esp32 2.0.17 בודק רק את המנפיק של התעודה העליונה ביותר שנשלחה, ולכן דחה שרשרת תקינה. דפדפנים וגרסאות ESP‑IDF חדשות יותר מטפלים בזה.</li>
-<li><strong>תיקון:</strong> עותק מקומי של ספריית WiFiClientSecure (‏<code>lib/WiFiClientSecure</code>, ראה <code>PATCHED.md</code>) עם כלל אימות מורחב: התעודה העליונה מתקבלת אם המנפיק שלה הוא שורש מהימן (הכלל המקורי), או אם היא עצמה זהה לשורש מהימן (אותו שם <strong>ואותו מפתח ציבורי</strong>), או אם תעודה נמוכה יותר בשרשרת היא שורש כזה. בנוסף, בדיקת התוקף נעצרת בשורש המהימן (כמו בדפדפנים), ובכשל נרשמים ללוג הנושא והמנפיק של ראש השרשרת.</li>
-<li><strong>בדיקה במחשב מול mbedTLS 2.28 אמיתי</strong> (‏<code>test/tls/run_tls_tests.sh</code>, היררכיית תעודות שנוצרה לבדיקה): הקוד <strong>המקורי</strong> דוחה שרשרת בסגנון AWS – משחזר בדיוק את הכישלון בלוח; הקוד המתוקן מקבל אותה, ודוחה: שם שרת שגוי, תעודה עם אותו שם אבל מפתח זר (התקפה), שרשרת לא מהימנה, חתימה עצמית. כל 117 תעודות השורש במאגר מזוהות נכון. כל שאר הבדיקות (יחידה, סימולטור, אמולטור, תוכנת התקנה) הורצו שוב.</li>
-<li><strong>עדיין דורש את הלוח:</strong> חיבור HTTPS אמיתי ל‑api.jolpi.ca עם התיקון (הלוג יציג את השרשרת המלאה ו‑<code>trusted root reached</code>).</li>
-<li><strong>אושר על הלוח הפיזי (ממך, 24.10.2026 19:25), גרסה 1.0.2:</strong> התצוגה עובדת ומציגה נתונים אמיתיים – חיבור HTTPS מאומת ל‑api.jolpi.ca, הורדה ופענוח עובדים על הלוח.</li>
+<li><strong>Test on the physical board, version 1.0.1:</strong> Wi‑Fi connected (the real network name had a trailing space, which explained the failure in version 1.0.0), RSSI -53 dBm, NTP synced (18:34 Israel time, UTC+3 – correct), 191KB of free memory. The first HTTPS request was rejected: <code>esp_crt_verify_callback(): Failed to verify certificate</code>, mbedTLS <code>-0x3000</code>.</li>
+<li><strong>Diagnosis:</strong> the server runs on AWS. AWS chains (and Google's too) end with a "cross-signed" copy of a trusted root certificate (for example Starfield Services Root G2) issued by an old root that Mozilla removed (Starfield Class 2). The bundle verification code in arduino‑esp32 2.0.17 only checks the issuer of the topmost certificate sent, so it rejected a valid chain. Browsers and newer ESP‑IDF versions handle this.</li>
+<li><strong>Fix:</strong> a local copy of the WiFiClientSecure library (<code>lib/WiFiClientSecure</code>, see <code>PATCHED.md</code>) with an extended verification rule: the top certificate is accepted if its issuer is a trusted root (the original rule), or if it is itself identical to a trusted root (same name <strong>and same public key</strong>), or if a certificate lower in the chain is such a root. In addition, the validity check stops at the trusted root (as in browsers), and on failure the subject and issuer of the top of the chain are logged.</li>
+<li><strong>Tested on the PC against real mbedTLS 2.28</strong> (<code>test/tls/run_tls_tests.sh</code>, with a certificate hierarchy generated for the test): the <strong>original</strong> code rejects an AWS-style chain – reproducing exactly the failure on the board; the fixed code accepts it, and rejects: a wrong server name, a certificate with the same name but a foreign key (an attack), an untrusted chain, and a self-signed certificate. All 117 root certificates in the store are recognized correctly. All other tests (unit, simulator, emulator, installer) were run again.</li>
+<li><strong>Still required the board:</strong> a real HTTPS connection to api.jolpi.ca with the fix (the log shows the full chain and <code>trusted root reached</code>).</li>
+<li><strong>Confirmed on the physical board (24.10.2026 19:25), version 1.0.2:</strong> the display works and shows real data – verified HTTPS connection to api.jolpi.ca, downloading and parsing work on the board.</li>
 </ul>
-<h2>גרסה 1.1.0 (28.10.2026) – מצב לאורך (Portrait)</h2>
-<p><strong>מה חדש:</strong> גרסת קושחה לאורך (240×320) לצד גרסת הרוחב, ואפשרות Settings ← Orientation למעבר בין ארבעה כיוונים בלי מחשב. כל המסכים עוצבו מחדש לאורך: כותרת בשתי שורות עם כפתור הגדרות, ספירה לאחור 2×2, עשר שורות בטבלאות עם דפדוף בתחתית, מסך הגדרת Wi‑Fi לאורך. כיול המגע נשמר במערכת קואורדינטות אחת ותקף בכל הכיוונים.</p>
-<p><strong>נבדק במחשב (גרסה 1.1.0):</strong>
-- בנייה של 4 גרסאות (ST7789/ILI9341 × רוחב/אורך) – בלי אזהרות, ‏44% מהמחיצה.
-- בדיקות יחידה: ‏49,122 בדיקות, 0 כשלים. כולל המרת קואורדינטות לכל 4 הסיבובים, וכיול שנעשה באורך ונבדק גם ברוחב.
-- סימולטור: 52 צילומי מסך (26 לכל כיוון) מקוד הממשק האמיתי. קודי ה‑QR בשני מסכי ההגדרה פוענחו בהצלחה.
-- <strong>בדיקות נגיעה בסימולטור</strong> דרך מטפל הנגיעות האמיתי: לשוניות, דפדוף, כפתור ההגדרות בכותרת, ומעבר כיוון ×3 (לאורך ← רוחב 180 ← אורך 180 ← רוחב) – הכל עבר.
-- אמולטור: גרסת האורך עולה בסיבוב 0, גרסת הרוחב בסיבוב 1, כולל טעינת כיול וזיכרון.
-- תוכנת ההתקנה: תפריט 4 האפשרויות נבדק.
-- כל בדיקות ה‑TLS, הפענוח והמטמון הורצו שוב.</p>
-<p><strong>דורש את הלוח הפיזי:</strong> תצוגה לאורך על המסך האמיתי. דיוק המגע לאורך עם הכיול הקיים – אם לא מדויק, כיול מחדש באורך פותר זאת תמיד. איזה סיבוב (0 או 2) מתאים לאיך שהלוח עומד אצלך.</p>
-<h2>גרסה 1.2.0 (28.10.2026) – כפתור כיוון פשוט בהגדרות</h2>
+<h2>Version 1.1.0 (28.10.2026) – Portrait mode</h2>
+<p><strong>What's new:</strong> a portrait (240×320) firmware build alongside the landscape build, and a Settings → Orientation option to switch between four orientations without a computer. All screens were redesigned for portrait: a two-row header with a settings button, a 2×2 countdown, ten rows in tables with paging at the bottom, and a portrait Wi‑Fi setup screen. Touch calibration is stored in a single coordinate system and is valid in all orientations.</p>
+<p><strong>Tested on the PC (version 1.1.0):</strong>
+- Build of 4 versions (ST7789/ILI9341 × landscape/portrait) – no warnings, 44% of the partition.
+- Unit tests: 49,122 tests, 0 failures. Including coordinate conversion for all 4 rotations, and a calibration made in portrait and also checked in landscape.
+- Simulator: 52 screenshots (26 per orientation) from the real UI code. The QR codes on both setup screens were decoded successfully.
+- <strong>Touch tests in the simulator</strong> through the real touch handler: tabs, paging, the settings button in the header, and switching orientation ×3 (portrait → landscape 180 → portrait 180 → landscape) – all passed.
+- Emulator: the portrait build boots at rotation 0 and the landscape build at rotation 1, including loading calibration and memory.
+- Installer: the 4-option menu was tested.
+- All TLS, parsing and cache tests were run again.</p>
+<p><strong>Requires the physical board:</strong> portrait display on the real screen. Touch accuracy in portrait with the existing calibration – if it's not accurate, recalibrating in portrait always fixes it. Which rotation (0 or 2) matches how the board stands.</p>
+<h2>Version 1.2.0 (28.10.2026) – a simple orientation toggle in Settings</h2>
 <ul>
-<li><strong>מה השתנה:</strong> בהגדרות יש מתג <strong>Orientation</strong> עם שני כפתורים, Wide (רוחב) ו‑Tall (אורך). נגיעה אחת מחליפה מיד, והמסך נשאר במסך ההגדרות. במקום מחזור של 4 מצבים יש שורה נפרדת <strong>Upside down</strong> להיפוך 180°. זה לבקשתך.</li>
-<li><strong>נבדק בסימולטור דרך מטפל הנגיעות האמיתי:</strong> Wide ← רוחב; Tall ← אורך; נגיעה ב‑Tall כשכבר לאורך לא משנה דבר; Upside down מעביר לאורך 180; Wide עם היפוך פעיל נותן רוחב 180; כיבוי ההיפוך מחזיר לרוחב. כל 15 בדיקות הנגיעה עברו. כל שאר הבדיקות הורצו שוב.</li>
+<li><strong>What changed:</strong> Settings has an <strong>Orientation</strong> switch with two buttons, Wide (landscape) and Tall (portrait). One tap switches immediately, and the screen stays on Settings. Instead of cycling through 4 modes there is a separate <strong>Upside down</strong> row for a 180° flip. This was a user request.</li>
+<li><strong>Tested in the simulator through the real touch handler:</strong> Wide → landscape; Tall → portrait; tapping Tall when already in portrait changes nothing; Upside down switches to portrait 180; Wide with the flip on gives landscape 180; turning the flip off returns to landscape. All 15 touch tests passed. All other tests were run again.</li>
 </ul></main></body></html>
